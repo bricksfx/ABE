@@ -6,3 +6,6 @@ from django.http import HttpResponse, Http404
 
 def login(request):
     return render(request, 'User/login.html', {})
+
+def index(request):
+    return render(request, 'User/index.html', {})
