@@ -9,7 +9,7 @@
     <link href="{% static 'css/index.css' %}" rel="stylesheet"/>
     <script src="{% static 'jquery/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <title>主页</title>
+    <title>{% block title %}主页{% endblock %}</title>
 </head>
 <body>
     <nav class="navbar navbar-default  navbar-fixed-top navbar-inverse">
@@ -22,7 +22,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">安全云</a>
+          <a class="navbar-brand" href="{% url 'user:index' %}">安全云</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -37,7 +37,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">252142844@qq.com <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#">修改客户信息</a></li>
+                <li><a href="#">修改账户信息</a></li>
               </ul>
             </li>
           </ul>
@@ -50,23 +50,19 @@
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
                     <li class="active"><a href="#">overview<span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">上传文件</a></li>
-                    <li><a href="#">共享我的文件</a></li>
-                    <li><a href="#">文件列表</a></li>
+                    <li><a href="{% url 'user:upload' %}">上传文件</a></li>
+                    <li><a href="{% url 'user:download' %}">下载文件</a></li>
+                    <li><a href="{% url 'user:share' %}">共享我的文件</a></li>
+                    <li><a href="{% url 'user:share' %}">文件列表</a></li>
                 </ul>
             </div>
-            <div class="col-sm-8 col-md-10 col-sm-offset-2 col-md-offset-2">
-                <div class="table-">
-                    <div class="upload-file">
-                        <p>上传文件</p>
+            <div class="col-sm-8 col-md-10 col-sm-offset-2 col-md-offset-2 main">
+                {% block intert-hook %}
+                    <div class="overview">
+                        <h1 class="page-header">overview</h1>
+                        <p>本站是采用django开发，使用属性加密保证安全性的云存储系统</p>
                     </div>
-                    <div class="-file">
-                        <p>共享我的文件</p>
-                    </div>
-                    <div class="list-file">
-                        <p>文件列表</p>
-                    </div>
-                </div>
+                {% endblock %}
             </div>
         </div>
     </div>
