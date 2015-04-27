@@ -9,22 +9,42 @@
     <link href="{% static 'css/login.css' %}" rel="stylesheet"/>
     <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+{#    <script>#}
+{#        $(document).ready(function(){#}
+{#            $.ajaxSetup({#}
+{#                 data: {csrfmiddlewaretoken: '{{ csrf_token }}' },#}
+{#            });#}
+{#            $("form").submit(function(){#}
+{#                var email = $("#inputEmail").val();#}
+{#                var password = $("#inputPassword").val();#}
+{#                $.ajax({#}
+{#                    type:"POST",#}
+{#                    data: {email:email, password:password},#}
+{#                    url: "{% url 'user:login' %}",#}
+{#                    cache: false,#}
+{#                    dataType: "html",#}
+{#                    success: function(result, statues, xml){#}
+{#                        alert(result);#}
+{#                    },#}
+{#                    error: function(){#}
+{#                    }#}
+{#                });#}
+{#                return false;#}
+{#            });#}
+{#        });#}
+{#    </script>#}
     <title>用户登录</title>
 </head>
 <body>
     <div class="container">
-        <form class="form-signin">
-        <h2 class="form-signin-heading">请登录</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> 记住我
-          </label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+        <form class="form-signin" method="post">
+            {% csrf_token %}
+            <h2 class="form-signin-heading">请登录</h2>
+            <label for="id_email" class="sr-only">Email address</label>
+            <input type="email" id="id_email" maxlength="255" name="email" class="form-control" placeholder="Email address" required autofocus>
+            <label for="id_password" class="sr-only">Password</label>
+            <input type="password" id="id_password" maxlength="128" name="password" class="form-control" placeholder="Password" required>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
       </form>
     </div>
 </body>
