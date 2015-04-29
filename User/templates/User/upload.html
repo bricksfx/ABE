@@ -4,5 +4,12 @@
     <div class="overview">
        <h1 class="page-header">文件上传</h1>
        <p>文件上传</p>
+        <div class="file-uploas">
+            <form enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-info" type="submit">上传</button>
+            </form>
+        </div>
     </div>
 {% endblock %}

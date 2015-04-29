@@ -44,6 +44,7 @@
             <input type="email" id="id_email" maxlength="255" name="email" class="form-control" placeholder="Email address" required autofocus>
             <label for="id_password" class="sr-only">Password</label>
             <input type="password" id="id_password" maxlength="128" name="password" class="form-control" placeholder="Password" required>
+            <input type="hidden" name="next" value="{{ next }}" />
             <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
       </form>
     </div>

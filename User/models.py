@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, date_of_birth, password=None):
+    def create_user(self, email, username, date_of_birth, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -15,6 +15,7 @@ class MyUserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
+            username=username,
             date_of_birth=date_of_birth,
         )
 
@@ -22,13 +23,14 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, date_of_birth, password):
+    def create_superuser(self, email, username, date_of_birth, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(email,
             password=password,
+            username=username,
             date_of_birth=date_of_birth
         )
         user.is_admin = True
@@ -42,6 +44,7 @@ class MyUser(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+    username = models.CharField(max_length=30)
     date_of_birth = models.DateField()
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -49,7 +52,7 @@ class MyUser(AbstractBaseUser):
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['date_of_birth']
+    REQUIRED_FIELDS = ['date_of_birth', 'username']
 
     def get_full_name(self):
         # The user is identified by their email address

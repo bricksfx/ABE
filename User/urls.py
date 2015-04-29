@@ -3,6 +3,7 @@ from User.views import *
 
 urlpatterns = patterns('',
                        url('^login', Login, name="login"),
+                       url('^logout/$', Logout, name="logout"),
                        url('^index', index, name="index"),
                        url('^upload/$', upload_file, name="upload"),
                        url('^download/$', download_file, name="download"),
