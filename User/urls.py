@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from User.views import *
 
 urlpatterns = patterns('',
-                       url('^login', login, name="login"),
+                       url('^login', Login, name="login"),
                        url('^index', index, name="index"),
                        url('^upload/$', upload_file, name="upload"),
                        url('^download/$', download_file, name="download"),

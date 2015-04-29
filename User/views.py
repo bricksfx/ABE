@@ -1,21 +1,37 @@
 #coding=utf8
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
 from User.models import MyUser
 from django import forms
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_protect
 
 
-# Create your views here.
+
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.PasswordInput()
-
-def login(request):
-    form = LoginForm()
+@csrf_protect
+def Login(request):
     if request.method == 'POST':
-        return HttpResponse("登录成功")
+        next_url = request.POST['next']
+
+    print request.GET
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(email=email, password=password)
+        print request
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+            else:
+                return HttpResponse("您的号被封了, 请联系本站管理员")
+        else:
+            return HttpResponse("请注册")
     return render(request, 'User/login.html', {'form': form})
 
 
