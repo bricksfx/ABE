@@ -1,5 +1,5 @@
 #coding=utf8
-from django.shortcuts import render
+from django.shortcuts import render,render_to_response
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
@@ -8,7 +8,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
-from .forms import UploadFileForm
+from .forms import UploadFileForm, LoginForm
 from .file_handle import handle_uploaded_file
 
 

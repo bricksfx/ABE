@@ -1,10 +1,11 @@
+#coding=utf8
 from django import forms
 
 
 class UploadFileForm(forms.Form):
 
-    title = forms.CharField("标题", max_length=50)
-    file = forms.FileField("文件")
+    title = forms.CharField(label="标题", max_length=50)
+    file = forms.FileField(label="文件")
 
 
 class LoginForm(forms.Form):

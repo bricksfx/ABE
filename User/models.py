@@ -80,3 +80,17 @@ class MyUser(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+
+# class FileFromUser(models.Model):
+#
+#     user = models.OneToOneField(MyUser)
+#     file = models.FileField()
+#     share = models.CharField(max_length=30)
+#     key = models.CharField(max_length=200)
+#
+#     def __unicode__(self):
+#         return self.user.username
+#
+
+
