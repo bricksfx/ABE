@@ -1,3 +1,4 @@
+#coding=utf8
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
@@ -10,8 +11,8 @@ from User.models import *
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='密码', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='确认密码', widget=forms.PasswordInput)
 
     class Meta:
         model = MyUser

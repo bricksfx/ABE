@@ -1,0 +1,26 @@
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{# Load CSS and JavaScript #}
+<title>注册</title>
+<link href="{% static 'css/login.css' %}" rel="stylesheet"/>
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{# Display a form #}
+<form class="form-signin" method="post" class="form">
+  <h2>注册</h2>
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% buttons %}
+    <button type="submit" class="btn btn-primary btn-lg btn-block">
+      提交
+    </button>
+  {% endbuttons %}
+</form>
+
+{# Read the documentation for more information #}

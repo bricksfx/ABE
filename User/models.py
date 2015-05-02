@@ -1,3 +1,4 @@
+#coding=utf8
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
@@ -40,12 +41,12 @@ class MyUserManager(BaseUserManager):
 
 class MyUser(AbstractBaseUser):
     email = models.EmailField(
-        verbose_name='email address',
+        verbose_name='邮箱',
         max_length=255,
         unique=True,
     )
-    username = models.CharField(max_length=30, unique=True)
-    date_of_birth = models.DateField()
+    username = models.CharField(verbose_name="用户名", max_length=30, unique=True)
+    date_of_birth = models.DateField(verbose_name="出生日期")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

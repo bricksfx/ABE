@@ -10,7 +10,19 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
 from .file_handle import handle_uploaded_file
+from .admin import UserCreationForm
 
+
+def Register(request):
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("注册成功")
+    else:
+        form = UserCreationForm()
+    return render(request, 'User/register.html', {'form': form})
 
 @csrf_protect
 def Login(request):

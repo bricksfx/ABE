@@ -5,34 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% load staticfiles %}
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"/>
+    {# Load CSS and JavaScript #}
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% bootstrap_messages %}
     <link href="{% static 'css/login.css' %}" rel="stylesheet"/>
-    <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-{#    <script>#}
-{#        $(document).ready(function(){#}
-{#            $.ajaxSetup({#}
-{#                 data: {csrfmiddlewaretoken: '{{ csrf_token }}' },#}
-{#            });#}
-{#            $("form").submit(function(){#}
-{#                var email = $("#inputEmail").val();#}
-{#                var password = $("#inputPassword").val();#}
-{#                $.ajax({#}
-{#                    type:"POST",#}
-{#                    data: {email:email, password:password},#}
-{#                    url: "{% url 'user:login' %}",#}
-{#                    cache: false,#}
-{#                    dataType: "html",#}
-{#                    success: function(result, statues, xml){#}
-{#                        alert(result);#}
-{#                    },#}
-{#                    error: function(){#}
-{#                    }#}
-{#                });#}
-{#                return false;#}
-{#            });#}
-{#        });#}
-{#    </script>#}
+
+
     <title>用户登录</title>
 </head>
 <body>
@@ -48,5 +28,17 @@
             <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
       </form>
     </div>
+{#    <div class="container">#}
+{#        <form class="form-signin" method="post" class="form">#}
+{#         <h2 class="form-signin-heading">请登录</h2>#}
+{#          {% csrf_token %}#}
+{#          {% bootstrap_form form %}#}
+{#          {% buttons %}#}
+{#            <button type="submit" class="btn btnbtn-lg btn-primary btn-block">#}
+{#               登录#}
+{#            </button>#}
+{#          {% endbuttons %}#}
+{#        </form>#}
+{#    </div>#}
 </body>
 </html>
