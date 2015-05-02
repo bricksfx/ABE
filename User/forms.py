@@ -1,5 +1,7 @@
 #coding=utf8
 from django import forms
+from django.forms import ModelForm
+from User.models import FileFromUser
 
 
 class UploadFileForm(forms.Form):
@@ -11,4 +13,8 @@ class UploadFileForm(forms.Form):
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.PasswordInput()
+
+class UploadFileFormFromModel(ModelForm):
+    class Meta:
+        model = FileFromUser
 

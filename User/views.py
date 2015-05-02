@@ -8,7 +8,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
-from .forms import UploadFileForm, LoginForm
+from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
 from .file_handle import handle_uploaded_file
 
 
@@ -45,19 +45,19 @@ def index(request):
 def upload_file(request):
     email = request.user.email
     user_name = request.user.username
-    form = UploadFileForm()
+    form = UploadFileFormFromModel()
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
+        form = UploadFileFormFromModel(request.POST, request.FILES)
         if request.method == 'POST':
-            form = UploadFileForm(request.POST, request.FILES)
+            form = UploadFileFormFromModel(request.POST, request.FILES)
             if form.is_valid():
-                handle_uploaded_file(request.FILES['file'], user_name)
+                form.save()
                 return HttpResponse("文件上传成功")
         else:
             form = UploadFileForm()
-        return render_to_response('upload.html', {'form': form})
+        return render_to_response('User/upload.html', {'form': form})
 
-    return render(request, 'User/upload.html', {'email': email, 'form':form})
+    return render(request, 'User/upload.html', {'email': email, 'form': form})
 
 
 @login_required(login_url='/login/')

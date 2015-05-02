@@ -44,7 +44,7 @@ class MyUser(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    username = models.CharField(max_length=30)
+    username = models.CharField(max_length=30, unique=True)
     date_of_birth = models.DateField()
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -82,15 +82,15 @@ class MyUser(AbstractBaseUser):
         return self.is_admin
 
 
-# class FileFromUser(models.Model):
-#
-#     user = models.OneToOneField(MyUser)
-#     file = models.FileField()
-#     share = models.CharField(max_length=30)
-#     key = models.CharField(max_length=200)
-#
-#     def __unicode__(self):
-#         return self.user.username
-#
+class FileFromUser(models.Model):
+
+    user = models.ForeignKey(MyUser)
+    file = models.FileField()
+    share = models.CharField(max_length=30)
+    key = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return self.user.username
+
 
 
