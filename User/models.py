@@ -83,10 +83,19 @@ class MyUser(AbstractBaseUser):
         return self.is_admin
 
 
+def upload_file_path(instance, filename):
+    import time
+    import os
+    path = instance.user.username + time.strftime("/%Y/%m/%d/") + filename
+    print path
+    print '/'.join(['content', instance.user.username, filename])
+    # return '/'.join(['content', instance.user.username, filename])
+    return path
+
 class FileFromUser(models.Model):
 
     user = models.ForeignKey(MyUser)
-    file = models.FileField()
+    file = models.FileField(upload_to=upload_file_path)
     share = models.CharField(max_length=30)
     key = models.CharField(max_length=200)
 

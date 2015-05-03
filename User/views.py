@@ -74,14 +74,17 @@ def upload_file(request):
 
 @login_required(login_url='/login/')
 def download_file(request):
-    return render(request, 'User/download.html', {})
+    email = request.user.email
+    return render(request, 'User/download.html', {'email': email})
 
 
 @login_required(login_url='/login/')
 def share_file(request):
-    return render(request, 'User/share.html', {})
+    email = request.user.email
+    return render(request, 'User/share.html', {'email': email})
 
 
 @login_required(login_url='/login/')
 def list_file(request):
-    return render(request, 'User/list.html', {})
+    email = request.user.email
+    return render(request, 'User/list.html', {'email': email})
