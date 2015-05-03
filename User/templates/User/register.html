@@ -5,6 +5,11 @@
 {# Load CSS and JavaScript #}
 <title>注册</title>
 <link href="{% static 'css/login.css' %}" rel="stylesheet"/>
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 
@@ -16,6 +21,7 @@
   <h2>注册</h2>
   {% csrf_token %}
   {% bootstrap_form form %}
+  {{ form.media }}
   {% buttons %}
     <button type="submit" class="btn btn-primary btn-lg btn-block">
       提交

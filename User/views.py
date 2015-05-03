@@ -19,7 +19,7 @@ def Register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse("注册成功")
+            return HttpResponseRedirect('/login/')
     else:
         form = UserCreationForm()
     return render(request, 'User/register.html', {'form': form})

@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.admin import widgets
 
 from User.models import *
 
@@ -11,12 +12,14 @@ from User.models import *
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
+    date_of_birth = forms.DateField( label="出生日期", widget=widgets.AdminDateWidget)
     password1 = forms.CharField(label='密码', widget=forms.PasswordInput)
     password2 = forms.CharField(label='确认密码', widget=forms.PasswordInput)
 
+
     class Meta:
         model = MyUser
-        fields = ('email', 'username', 'date_of_birth')
+        fields = ('email', 'username')
 
     def clean_password2(self):
         # Check that the two password entries match
