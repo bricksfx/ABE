@@ -11,6 +11,8 @@ from django.views.decorators.csrf import csrf_protect
 from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
 from .file_handle import handle_uploaded_file
 from .admin import UserCreationForm
+from .models import *
+from encoding import decrypt_file, encrypt_file
 
 
 def Register(request):
@@ -53,6 +55,25 @@ def index(request):
     email = request.user.email
     return render(request, 'User/index.html', {'email': email})
 
+
+# @login_required(login_url='/login/')
+# def upload_file(request):
+#     email = request.user.email
+#     user_name = request.user.username
+#     form = UploadFileFormFromModel()
+#     if request.method == 'POST':
+#         form = UploadFileFormFromModel(request.POST, request.FILES)
+#         if request.method == 'POST':
+#             form = UploadFileFormFromModel(request.POST, request.FILES)
+#             if form.is_valid():
+#                 form.save()
+#                 return HttpResponse("文件上传成功")
+#         else:
+#             form = UploadFileForm()
+#         return render_to_response('User/upload.html', {'form': form})
+#
+#     return render(request, 'User/upload.html', {'email': email, 'form': form})
+
 @login_required(login_url='/login/')
 def upload_file(request):
     email = request.user.email
@@ -60,17 +81,20 @@ def upload_file(request):
     form = UploadFileFormFromModel()
     if request.method == 'POST':
         form = UploadFileFormFromModel(request.POST, request.FILES)
-        if request.method == 'POST':
-            form = UploadFileFormFromModel(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return HttpResponse("文件上传成功")
+        if form.is_valid():
+            new_file = FileFromUser()
+            new_file.user = request.user
+            new_file.file =request.FILES['file']
+            new_file.share = form.cleaned_data['share']
+            new_file.key = ''
+            new_file.save()
+            print new_file.file.path
+            return HttpResponse("文件上传成功")
         else:
             form = UploadFileForm()
         return render_to_response('User/upload.html', {'form': form})
 
     return render(request, 'User/upload.html', {'email': email, 'form': form})
-
 
 @login_required(login_url='/login/')
 def download_file(request):
