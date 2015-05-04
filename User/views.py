@@ -57,24 +57,6 @@ def index(request):
     return render(request, 'User/index.html', {'email': email})
 
 
-# @login_required(login_url='/login/')
-# def upload_file(request):
-#     email = request.user.email
-#     user_name = request.user.username
-#     form = UploadFileFormFromModel()
-#     if request.method == 'POST':
-#         form = UploadFileFormFromModel(request.POST, request.FILES)
-#         if request.method == 'POST':
-#             form = UploadFileFormFromModel(request.POST, request.FILES)
-#             if form.is_valid():
-#                 form.save()
-#                 return HttpResponse("文件上传成功")
-#         else:
-#             form = UploadFileForm()
-#         return render_to_response('User/upload.html', {'form': form})
-#
-#     return render(request, 'User/upload.html', {'email': email, 'form': form})
-
 @login_required(login_url='/login/')
 def upload_file(request):
     email = request.user.email
@@ -113,3 +95,8 @@ def share_file(request):
 def list_file(request):
     email = request.user.email
     return render(request, 'User/list.html', {'email': email})
+
+def upload(request):
+    if request.method == 'POST':
+        print request.POST
+    return render(request, 'User/upload2.html')
