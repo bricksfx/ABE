@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aee01f05-6dcc-4f77-8199-0414922ee701" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/User/encoding.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/media/bricks/2015/05/04/bricks.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/User/file_handle.py" afterPath="$PROJECT_DIR$/User/file_handle.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/User/forms.py" afterPath="$PROJECT_DIR$/User/forms.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/User/encoding.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/User/views.py" afterPath="$PROJECT_DIR$/User/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ABE.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,17 +26,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/User/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1486" max-vertical-offset="2142">
-              <caret line="90" column="0" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="0.41326532" vertical-offset="1458" max-vertical-offset="2160">
+              <caret line="90" column="27" selection-start-line="90" selection-start-column="27" selection-end-line="90" selection-end-column="27" />
+              <folding>
+                <element signature="e#13#67#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="decrypt.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/User/decrypt.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="828">
+              <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="encrypt.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/User/encrypt.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="810" max-vertical-offset="1224">
+              <caret line="55" column="14" selection-start-line="55" selection-start-column="14" selection-end-line="55" selection-end-column="14" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ABE/settings.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="702" max-vertical-offset="1710">
@@ -132,6 +154,8 @@
         <option value="$PROJECT_DIR$/User/Encrypt_File/encoding.py" />
         <option value="$PROJECT_DIR$/User/forms.py" />
         <option value="$PROJECT_DIR$/User/views.py" />
+        <option value="$PROJECT_DIR$/User/decrypt.py" />
+        <option value="$PROJECT_DIR$/User/encrypt.py" />
       </list>
     </option>
   </component>
@@ -480,8 +504,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="24" width="1366" height="744" extended-state="1" />
-    <editor active="false" />
+    <frame x="0" y="24" width="1366" height="744" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32866043" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2625571" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -530,14 +554,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/User/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="252" max-vertical-offset="1800">
-          <caret line="14" column="82" selection-start-line="14" selection-start-column="82" selection-end-line="14" selection-end-column="82" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/User/file_handle.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="486">
@@ -604,7 +620,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="288">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#13#67#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -651,7 +669,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="288">
           <caret line="10" column="49" selection-start-line="10" selection-start-column="49" selection-end-line="10" selection-end-column="49" />
-          <folding />
+          <folding>
+            <element signature="e#13#67#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -698,7 +718,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="126" max-vertical-offset="234">
           <caret line="7" column="49" selection-start-line="7" selection-start-column="49" selection-end-line="7" selection-end-column="49" />
-          <folding />
+          <folding>
+            <element signature="e#13#67#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -887,25 +909,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/User/encoding.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30508474" vertical-offset="0" max-vertical-offset="432">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/User/forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="468">
           <caret line="19" column="33" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/User/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1486" max-vertical-offset="2142">
-          <caret line="90" column="0" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -915,6 +922,36 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="702" max-vertical-offset="1710">
           <caret line="39" column="17" selection-start-line="39" selection-start-column="17" selection-end-line="39" selection-end-column="17" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/User/decrypt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="828">
+          <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/User/encrypt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="810" max-vertical-offset="1224">
+          <caret line="55" column="14" selection-start-line="55" selection-start-column="14" selection-end-line="55" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/User/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41326532" vertical-offset="1458" max-vertical-offset="2160">
+          <caret line="90" column="27" selection-start-line="90" selection-start-column="27" selection-end-line="90" selection-end-column="27" />
+          <folding>
+            <element signature="e#13#67#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

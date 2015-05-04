@@ -12,7 +12,8 @@ from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
 from .file_handle import handle_uploaded_file
 from .admin import UserCreationForm
 from .models import *
-from encoding import decrypt_file, encrypt_file
+from encrypt import encrypt_file
+from decrypt import decrypt_file
 
 
 def Register(request):
