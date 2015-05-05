@@ -10,5 +10,6 @@ urlpatterns = patterns('',
                        url('^download/$', download_file, name="download"),
                        url('^share/$', share_file, name='share'),
                        url('^list/$', list_file, name='list'),
-                       url('^file/$', upload, name="test"),
+                       url('^file?.*/$', upload, name="test"),
+                       url('^test_upload/$', test_upload, name="test_upload"),
                        )

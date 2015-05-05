@@ -100,3 +100,6 @@ def upload(request):
     if request.method == 'POST':
         print request.POST
     return render(request, 'User/upload2.html')
+
+def test_upload(request):
+    return render(request, 'User/test_upload.html', {})
