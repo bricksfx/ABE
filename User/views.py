@@ -68,6 +68,7 @@ def upload_file(request):
             new_file = FileFromUser()
             new_file.user = request.user
             new_file.file =request.FILES['file']
+            print request.FILES
             new_file.share = form.cleaned_data['share']
             new_file.key = ''
             new_file.save()
@@ -78,6 +79,7 @@ def upload_file(request):
         return render_to_response('User/upload.html', {'form': form})
 
     return render(request, 'User/upload.html', {'email': email, 'form': form})
+
 
 @login_required(login_url='/login/')
 def download_file(request):
@@ -101,5 +103,10 @@ def upload(request):
         print request.POST
     return render(request, 'User/upload2.html')
 
+
 def test_upload(request):
+    if request.method == 'POST':
+        if request.FILES:
+            print handle_uploaded_file(request.FILES['file'], request.user.username)
+
     return render(request, 'User/test_upload.html', {})

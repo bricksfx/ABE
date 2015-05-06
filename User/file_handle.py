@@ -4,11 +4,12 @@ from django.core.files import File
 from ABE.settings import MEDIA_ROOT
 
 def handle_uploaded_file(f, user_name):
-    print os.getcwd()
+    print 'media_root', MEDIA_ROOT
+    print type(f)
     file_name = unicode(f.name)
-    print type(file_name)
     print file_name
-    path = MEDIA_ROOT + user_name + time.strftime("/%Y/%m/%d/")
+    path = MEDIA_ROOT + '/tmp/' + user_name + time.strftime("/%Y/%m/%d/")
+    print 'path in function', path
     if not os.path.exists(path):
         os.makedirs(path)
     file_name = path + file_name

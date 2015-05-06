@@ -92,6 +92,7 @@ def upload_file_path(instance, filename):
     # return '/'.join(['content', instance.user.username, filename])
     return path
 
+
 class FileFromUser(models.Model):
 
     user = models.ForeignKey(MyUser)
@@ -103,4 +104,14 @@ class FileFromUser(models.Model):
         return self.user.username
 
 
+class DataOfUser(models.Model):
 
+    SexInfo = {
+        ('F', '女'),
+        ('M', '男'),
+    }
+    user = models.OneToOneField(MyUser)
+    sex = models.CharField(max_length=1, choices=SexInfo)
+
+    def __unicode__(self):
+        return self.user.username

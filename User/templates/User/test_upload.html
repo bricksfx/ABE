@@ -2,9 +2,43 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>jquery 文件提交</title>
+    {% load staticfiles %}
+    <style type="text/css" rel="stylesheet">
+        .bar{
+            height:18px;
+            background: green;
+        }
+    </style>
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'js/jquery.fileupload.js' %}"></script>
+    <script>
+       $(function () {
+           $('#fileupload').fileupload({
+               dataType: 'json',
+               add: function (e, data) {
+                   data.context = $('<button/>').text('Upload')
+                       .appendTo(document.body)
+                       .click(function () {
+                           data.context = $('<p/>').text('上传中').replaceAll($(this));
+                           data.submit();
+                       });
+               },
+               done: function (e, data) {
+                   data.context.text('Upload finished.');
+               }
+           });
+       });
+    </script>
+
 </head>
 <body>
     <p>test</p>
+    <input id="fileupload" type="file" name="file" data-url="{% url 'user:test_upload' %}" multiple>
+    <button type="button">提交</button>
+    <div id="progress">
+    <div class="bar" style="width: 0%;"></div>
+</div>
 </body>
 </html>
