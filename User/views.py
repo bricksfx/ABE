@@ -96,7 +96,13 @@ def upload_file(request):
 @login_required(login_url='/login/')
 def download_file(request):
     email = request.user.email
-    return render(request, 'User/download.html', {'email': email})
+    user = request.user
+    try:
+        user_files = FileFromUser.objects.filter(user=user)
+    except FileFromUser.DoesNotExist, ex:
+        print ex
+
+    return render(request, 'User/download.html', {'email': email, 'user_files': user_files})
 
 
 @login_required(login_url='/login/')

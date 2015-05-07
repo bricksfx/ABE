@@ -3,6 +3,30 @@
 {% block intert-hook %}
     <div class="overview">
        <h1 class="page-header">文件下载</h1>
-       <p>文件下载</p>
+       <div class="container">
+           <div class="row">
+               <div class="col-xs-12 col-md-9"">
+                   <div class="my_file">
+                       {% ifequal user_files.count 0 %}
+                           <h3>用户暂时没有个人文件</h3>
+                       {% else %}
+                       <table class="my_file_table table table-bordered">
+                           <caption class="my_file_table_caption"><h3>我的文件</h3></caption>
+                           <tr>
+                               <th>文件名</th>
+                               <th>大小</th>
+                               <th>上传日期</th>
+                               <th>类型</th>
+                               <th></th>
+                           </tr>
+                       </table>
+                       {% endifequal %}
+                   </div>
+                   <div class="other_file">
+
+                   </div>
+               </div>
+           </div>
+       </div>
     </div>
 {% endblock %}

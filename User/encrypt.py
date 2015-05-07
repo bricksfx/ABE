@@ -1,5 +1,4 @@
 import os, random, struct
-import hashlib
 from Crypto.Cipher import AES
 import string
 

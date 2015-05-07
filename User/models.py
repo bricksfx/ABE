@@ -99,7 +99,8 @@ class FileFromUser(models.Model):
     file = models.FileField(upload_to=upload_file_path)
     share = models.CharField(max_length=30)
     key = models.CharField(max_length=200)
-
+    date_upload = models.DateTimeField(auto_now_add=True)
+    type = models.CharField(max_length=1, default='1')
     def __unicode__(self):
         return self.user.username
 
