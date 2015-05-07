@@ -8,7 +8,7 @@ def make_file_path_for_model(user_name):
 
     path = MEDIA_ROOT + '/file/' + user_name + time.strftime("/%Y/%m/%d/")
     if not os.path.exists(path):
-        os.mkdir(path)
+        os.makedirs(path)
     return path
 
 def handle_uploaded_file(f, user_name):

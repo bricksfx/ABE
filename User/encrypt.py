@@ -1,13 +1,23 @@
 import os, random, struct
 import hashlib
 from Crypto.Cipher import AES
+import string
+
+
+def create_key():
+    """create a 32 bit password"""
+    letters = string.letters + string.digits
+    key = ''
+    for letter in range(32):
+        key += random.choice(letters)
+    return key
+
 
 def process_key(password):
     if len(password) <= 32:
         padding = 32 - len(password)
         for i in range(padding):
             password += '0'
-        print len(password)
     return password
     
 

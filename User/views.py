@@ -12,7 +12,7 @@ from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_m
 from .admin import UserCreationForm
 from .decrypt import decrypt_file
 from .models import *
-from encrypt import encrypt_file
+from encrypt import encrypt_file, create_key
 from decrypt import decrypt_file
 from django.core.files import File
 
@@ -67,16 +67,23 @@ def upload_file(request):
         form = UploadFileFormFromModel(request.POST, request.FILES)
         if form.is_valid():
             path = handle_uploaded_file(request.FILES['file'], request.user.username)
-            path_of_model = make_file_path_for_model(request.user.username)
-            encrypt_file(form.cleaned_data['key'], path, path_of_model)
-
+            path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name
+            key = create_key()
+            encrypt_file(key, path, path_of_model)
+            try:
+                new_model_file = open(path_of_model, 'r')
+            except IOError, ex:
+                print ex
             if delete_file(path):
-                print "文件删除成功"
-            new_file = FileFromUser()
-            new_file.user = request.user
-            new_file.share = form.cleaned_data['share']
-            new_file.key = ''
-            new_file.save()
+                new_file = FileFromUser()
+                new_file.user = request.user
+                new_file.share = form.cleaned_data['share']
+                new_file.key = key
+                new_file.file = File(new_model_file)
+                new_file.save()
+                new_model_file.close()
+            else:
+                raise Http404
             print new_file.file.path
             return HttpResponse("文件上传成功")
         else:

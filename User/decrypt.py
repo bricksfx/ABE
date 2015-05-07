@@ -3,13 +3,7 @@ from Crypto.Cipher import AES
 from encrypt import process_key
 import string
 
-def create_key():
-    """create a 32 bit password"""
-    letters = string.letters + string.digits
-    key = ''
-    for letter in range(32):
-        key += random.choice(letters)
-    return key
+
 
 def decrypt_file(key, in_filename, out_filename=None, chunksize=24*1024):
     """ Decrypts a file using AES (CBC mode) with the
