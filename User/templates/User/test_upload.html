@@ -1,44 +1,39 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>jquery 文件提交</title>
+<head>
+<meta charset="utf-8">
+    <title>jQuery File Upload Example</title>
     {% load staticfiles %}
-    <style type="text/css" rel="stylesheet">
-        .bar{
-            height:18px;
-            background: green;
-        }
-    </style>
-    <script src="{% static 'jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'js/jquery.ui.widget.js' %}"></script>
-    <script src="{% static 'js/jquery.fileupload.js' %}"></script>
-    <script>
-       $(function () {
-           $('#fileupload').fileupload({
-               dataType: 'json',
-               add: function (e, data) {
-                   data.context = $('<button/>').text('Upload')
-                       .appendTo(document.body)
-                       .click(function () {
-                           data.context = $('<p/>').text('上传中').replaceAll($(this));
-                           data.submit();
-                       });
-               },
-               done: function (e, data) {
-                   data.context.text('Upload finished.');
-               }
-           });
-       });
-    </script>
-
 </head>
 <body>
-    <p>test</p>
-    <input id="fileupload" type="file" name="file" data-url="{% url 'user:test_upload' %}" multiple>
-    <button type="button">提交</button>
-    <div id="progress">
-    <div class="bar" style="width: 0%;"></div>
-</div>
+    <input id="fileupload" type="file" name="files[]" data-url="{% url 'user:test_upload' %}" multiple>
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'Upload/js/vendor/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'Upload/js/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'Upload/js/jquery.fileupload.js' %}"></script>
+    <script>
+    $(function () {
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            add: function (e, data) {
+                data.context = $('<button/>').text('上传')
+                    .appendTo(document.body)
+                    .click(function () {
+                        data.context = $('<p/>').text('上传中...').replaceAll($(this));
+                        var jqXHR = data.submit()
+                        .success(function (result, textStatus, jqXHR) {
+                                    alert(result);
+                                })
+                        .error(function (jqXHR, textStatus, errorThrown) {/* ... */})
+                        .complete(function (result, textStatus, jqXHR) {/* ... */});
+                    });
+            },
+
+            done: function (e, data) {
+                data.context.text('上传结束');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
