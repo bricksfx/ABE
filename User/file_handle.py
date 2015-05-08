@@ -11,6 +11,7 @@ def make_file_path_for_model(user_name):
         os.makedirs(path)
     return path
 
+
 def handle_uploaded_file(f, user_name):
 
     file_name = unicode(f.name)

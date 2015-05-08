@@ -10,16 +10,28 @@
                        {% ifequal user_files.count 0 %}
                            <h3>用户暂时没有个人文件</h3>
                        {% else %}
-                       <table class="my_file_table table table-bordered">
-                           <caption class="my_file_table_caption"><h3>我的文件</h3></caption>
-                           <tr>
-                               <th>文件名</th>
-                               <th>大小</th>
-                               <th>上传日期</th>
-                               <th>类型</th>
-                               <th></th>
-                           </tr>
-                       </table>
+
+                           <table class="my_file_table table table-bordered table-condensed">
+                               <caption class="my_file_table_caption"><h3>我的文件</h3></caption>
+                               <tr>
+                                   <th>文件名</th>
+                                   <th>大小</th>
+                                   <th>上传日期</th>
+                                   <th>文件类型</th>
+                                   <th>共享</th>
+                                   <th>操作</th>
+                               </tr>
+                               {% for file in user_files %}
+                                <tr>
+                                    <td>{{ file }}</td>
+                                    <td>{{ file.file_size_humanility }}</td>
+                                    <td>{{ file.date_upload }}</td>
+                                    <td>{{ file.file.type }}</td>
+                                    <td>{{ file.share_type }}</td>
+                                    <td><a href="{% url 'user:file_down_single' %}" target="_blank">/下载</a><a href="#" target="_blank">删除</a></td>
+                                </tr>
+                                {% endfor %}
+                           </table>
                        {% endifequal %}
                    </div>
                    <div class="other_file">

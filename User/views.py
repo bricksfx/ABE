@@ -15,6 +15,7 @@ from .models import *
 from encrypt import encrypt_file, create_key
 from decrypt import decrypt_file
 from django.core.files import File
+from django.http import StreamingHttpResponse
 
 
 def Register(request):
@@ -104,6 +105,22 @@ def download_file(request):
 
     return render(request, 'User/download.html', {'email': email, 'user_files': user_files})
 
+@login_required(login_url='/login/')
+def file_down_single(requset):
+    def file_iterator(file_name, chunk_size=512):
+        with open(file_name) as f:
+            while True:
+                c = f.read(chunk_size)
+                if c:
+                    yield c
+                else:
+                    break
+    the_file_name = "/home/fangxu/图片/mbuntu-5.jpg"
+    response = StreamingHttpResponse(file_iterator(the_file_name))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+    return response
+
 
 @login_required(login_url='/login/')
 def share_file(request):
@@ -115,6 +132,7 @@ def share_file(request):
 def list_file(request):
     email = request.user.email
     return render(request, 'User/list.html', {'email': email})
+
 
 def upload(request):
     if request.method == 'POST':
