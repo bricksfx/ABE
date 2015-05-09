@@ -118,17 +118,26 @@ class FileFromUser(models.Model):
         elif (size >= 1000000000) and (size <= 1000000000000):
             return str(round(size/1000000000.0, 2)) + u"GB"
 
+class Academy(models.Model):
+
+    name = models.CharField(verbose_name="学院名称", max_length=100)
+
+class Department(models.Model):
+    academy = models.ForeignKey(Academy)
+    name = models.CharField(verbose_name="专业名称", max_length=100)
 
 
 
 class DataOfUser(models.Model):
 
     SexInfo = {
-        ('F', '女'),
-        ('M', '男'),
+        ('1', '女'),
+        ('2', '男'),
     }
     user = models.OneToOneField(MyUser)
     sex = models.CharField(max_length=1, choices=SexInfo)
+    academy = models.ForeignKey(Academy)
+    major = models.ForeignKey(Department)
 
     def __unicode__(self):
         return self.user.username
