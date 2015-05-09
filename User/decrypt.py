@@ -1,7 +1,6 @@
 import os, random, struct
 from Crypto.Cipher import AES
 from encrypt import process_key
-import string
 
 
 
@@ -34,6 +33,6 @@ def decrypt_file(key, in_filename, out_filename=None, chunksize=24*1024):
 
 
 if __name__ == '__main__':
-    print create_key()
+    pass
 
 

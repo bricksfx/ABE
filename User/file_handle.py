@@ -4,9 +4,16 @@ from django.core.files import File
 from ABE.settings import MEDIA_ROOT
 
 
+def set_tmp_path(user_name):
+    path = MEDIA_ROOT + '/tmp/' + user_name + time.strftime("/%Y/%m/%d/")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+
 def make_file_path_for_model(user_name):
 
-    path = MEDIA_ROOT + '/file/' + user_name + time.strftime("/%Y/%m/%d/")
+    path = MEDIA_ROOT + '/upload/' + user_name + time.strftime("/%Y/%m/%d/")
     if not os.path.exists(path):
         os.makedirs(path)
     return path
@@ -15,8 +22,8 @@ def make_file_path_for_model(user_name):
 def handle_uploaded_file(f, user_name):
 
     file_name = unicode(f.name)
+
     path = MEDIA_ROOT + '/tmp/' + user_name + time.strftime("/%Y/%m/%d/")
-    print 'path in function', path
     if not os.path.exists(path):
         os.makedirs(path)
     file_name = path + file_name

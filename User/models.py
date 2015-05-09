@@ -86,7 +86,9 @@ class MyUser(AbstractBaseUser):
 def upload_file_path(instance, filename):
     import time
     import os
-    path = "file/" + instance.user.username + time.strftime("/%Y/%m/%d/") + filename
+    path = "file/" + instance.user.username + time.strftime("/%Y/%m/%d/") + filename.split('/')[-1]
+    print "model filename", filename
+    print "model filepath", path
     print path
     print '/'.join(['content', instance.user.username, filename])
     # return '/'.join(['content', instance.user.username, filename])
@@ -102,6 +104,9 @@ class FileFromUser(models.Model):
     date_upload = models.DateTimeField(auto_now_add=True)
     share_type = models.CharField(max_length=1, default='1')
 
+    def __unicode__(self):
+        return self.file.name.split('/')[-1]
+
     def file_size_humanility(self):
         size = self.file.size
         if size <= 1000:
@@ -114,9 +119,6 @@ class FileFromUser(models.Model):
             return str(round(size/1000000000.0, 2)) + u"GB"
 
 
-
-    def __unicode__(self):
-        return self.user.username
 
 
 class DataOfUser(models.Model):

@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
-from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model
+from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model, set_tmp_path
 from .admin import UserCreationForm
 from .decrypt import decrypt_file
 from .models import *
@@ -68,9 +68,10 @@ def upload_file(request):
         form = UploadFileFormFromModel(request.POST, request.FILES)
         if form.is_valid():
             path = handle_uploaded_file(request.FILES['file'], request.user.username)
-            path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name
+            path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name.split("/")[-1]
             key = create_key()
             encrypt_file(key, path, path_of_model)
+
             try:
                 new_model_file = open(path_of_model, 'r')
             except IOError, ex:
@@ -83,9 +84,9 @@ def upload_file(request):
                 new_file.file = File(new_model_file)
                 new_file.save()
                 new_model_file.close()
+                delete_file(path_of_model)
             else:
                 raise Http404
-            print new_file.file.path
             return HttpResponse("文件上传成功")
         else:
             form = UploadFileForm()
@@ -105,8 +106,16 @@ def download_file(request):
 
     return render(request, 'User/download.html', {'email': email, 'user_files': user_files})
 
+
 @login_required(login_url='/login/')
-def file_down_single(requset):
+def file_down_single(request, file_id):
+    try:
+        file = FileFromUser.objects.get(id=file_id)
+    except FileFromUser.DoesNotExist, ex:
+        return HttpResponse("您所寻找的文件可能已被删除")
+
+    out_path = set_tmp_path(request.user.username) + file.file.path.split("/")[-1]
+    decrypt_file(file.key, file.file.path, out_path)
     def file_iterator(file_name, chunk_size=512):
         with open(file_name) as f:
             while True:
@@ -115,11 +124,23 @@ def file_down_single(requset):
                     yield c
                 else:
                     break
-    the_file_name = "/home/fangxu/图片/mbuntu-5.jpg"
+        delete_file(file_name)
+    the_file_name = out_path
     response = StreamingHttpResponse(file_iterator(the_file_name))
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
     return response
+
+@login_required(login_url='/login/')
+def file_delete(request, file_id):
+    try:
+        file_delete = FileFromUser.objects.get(id=file_id)
+    except FileFromUser.DoesNotExist, ex:
+        return HttpResponse("您所要删除的文件不存在")
+    file_path = file_delete.file.path
+    file_delete.delete()
+    delete_file(file_path)
+    return HttpResponse("文件删成功")
 
 
 @login_required(login_url='/login/')
