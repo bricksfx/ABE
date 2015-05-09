@@ -122,9 +122,23 @@ class Academy(models.Model):
 
     name = models.CharField(verbose_name="学院名称", max_length=100)
 
+    class Meta:
+        verbose_name = "学院"
+        verbose_name_plural = "学院"
+
+    def __unicode__(self):
+        return self.name
+
 class Department(models.Model):
     academy = models.ForeignKey(Academy)
     name = models.CharField(verbose_name="专业名称", max_length=100)
+
+    class Meta:
+        verbose_name = "系"
+        verbose_name = "系"
+
+    def __unicode__(self):
+        return self.name
 
 
 
@@ -140,9 +154,14 @@ class DataOfUser(models.Model):
         ('3', '教师')
     }
     user = models.OneToOneField(MyUser)
-    sex = models.CharField(max_length=1, choices=SexInfo, default='1')
+    sex = models.CharField(verbose_name= "性别", max_length=1, choices=SexInfo)
     academy = models.ForeignKey(Academy)
-    major = models.ForeignKey(Department)
-    identity = models.CharField(max_length=1, choices=identityInfo, default='1')
+    major = models.ForeignKey(Department, verbose_name="所在系")
+    identity = models.CharField(verbose_name="身份", max_length=1, choices=identityInfo)
+
     def __unicode__(self):
         return self.user.username
+
+    class Meta:
+        verbose_name = "用户信息"
+        verbose_name_plural = "用户信息"

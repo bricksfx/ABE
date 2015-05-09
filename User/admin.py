@@ -89,6 +89,9 @@ admin.site.register(MyUser, MyUserAdmin)
 # unregister the Group model from admin.
 # admin.site.unregister(Group)
 admin.site.register(FileFromUser)
+admin.site.register(Department)
+admin.site.register(Academy)
+admin.site.register(DataOfUser)
 
 
 
