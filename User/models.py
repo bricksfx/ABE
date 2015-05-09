@@ -134,10 +134,15 @@ class DataOfUser(models.Model):
         ('1', '女'),
         ('2', '男'),
     }
+    identityInfo = {
+        ('1', '学生'),
+        ('2', '研究生'),
+        ('3', '教师')
+    }
     user = models.OneToOneField(MyUser)
-    sex = models.CharField(max_length=1, choices=SexInfo)
+    sex = models.CharField(max_length=1, choices=SexInfo, default='1')
     academy = models.ForeignKey(Academy)
     major = models.ForeignKey(Department)
-
+    identity = models.CharField(max_length=1, choices=identityInfo, default='1')
     def __unicode__(self):
         return self.user.username
