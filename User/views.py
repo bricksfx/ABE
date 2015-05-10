@@ -16,6 +16,7 @@ from encrypt import encrypt_file, create_key
 from decrypt import decrypt_file
 from django.core.files import File
 from django.http import StreamingHttpResponse
+from django.http import JsonResponse
 
 
 def Register(request):
@@ -64,6 +65,7 @@ def index(request):
 def upload_file(request):
     user = request.user
     user_name = request.user.username
+    academys = Academy.objects.all()
     form = UploadFileFormFromModel()
     if request.method == 'POST':
         form = UploadFileFormFromModel(request.POST, request.FILES)
@@ -93,18 +95,19 @@ def upload_file(request):
             form = UploadFileForm()
         return render_to_response('User/upload.html', {'form': form})
 
-    return render(request, 'User/upload.html', {'user': user, 'form': form})
+    return render(request, 'User/upload.html', {'user': user, 'form': form, 'academys': academys})
 
 
 @login_required(login_url='/login/')
 def download_file(request):
+    academys = Academy.objects.all()
     user = request.user
     try:
         user_files = FileFromUser.objects.filter(user=user)
     except FileFromUser.DoesNotExist, ex:
         print ex
 
-    return render(request, 'User/download.html', {'user': user, 'user_files': user_files})
+    return render(request, 'User/download.html', {'user': user, 'user_files': user_files, 'academys': academys})
 
 
 @login_required(login_url='/login/')
@@ -116,6 +119,7 @@ def file_down_single(request, file_id):
 
     out_path = set_tmp_path(request.user.username) + file.file.path.split("/")[-1]
     decrypt_file(file.key, file.file.path, out_path)
+
     def file_iterator(file_name, chunk_size=512):
         with open(file_name) as f:
             while True:
@@ -145,14 +149,33 @@ def file_delete(request, file_id):
 
 @login_required(login_url='/login/')
 def share_file(request):
+    academys = Academy.objects.all()
     user = request.user
-    return render(request, 'User/share.html', {'user': user})
+    return render(request, 'User/share.html', {'user': user, 'academys': academys})
 
 
 @login_required(login_url='/login/')
 def list_file(request):
+    academys = Academy.objects.all()
     user = request.user
-    return render(request, 'User/list.html', {'user': user})
+    return render(request, 'User/list.html', {'user': user, 'academys': academys})
+
+@login_required(login_url='/login/')
+def get_department(request):
+    if request.method == 'POST':
+        academy = int(request.POST['academy'])
+        try:
+            departments = Department.objects.filter(academy_id=academy)
+        except Department.DoesNotExist, ex:
+            print ex
+        department_id = []
+        department_name = []
+        for department in departments:
+            department_id.append(department.id)
+            department_name.append(department.name)
+
+        department_info = dict(zip(department_id, department_name))
+        return JsonResponse(department_info)
 
 
 def upload(request):
@@ -162,7 +185,6 @@ def upload(request):
 
 
 def test_upload(request):
-    from django.http import JsonResponse
 
     if request.method == 'POST':
         if request.FILES:

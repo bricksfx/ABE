@@ -9,9 +9,40 @@
     <link href="{% static 'css/index.css' %}" rel="stylesheet"/>
     <script src="{% static 'jquery/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/json2.js' %}"></script>
     <script>
         function getDepartment(){
-            alert($("#select_academy_selection").val())
+            $.ajaxSetup({
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+            });
+            var academy = $("#select_academy_selection").val();
+            $.ajax({
+                type:'POST',
+                data:{'academy': academy},
+                url:"{% url 'user:get_department' %}",
+                cache: false,
+                dataType: 'html',
+                success: function(result){
+                    var jsonObj = new Array();
+                    jsonObj = JSON.parse(result);
+                    var htmlreverse = "<div>test</div>";
+                    console.log(jsonObj);
+                    for(var x in jsonObj){
+                        console.log(x);
+                        console.log(jsonObj[x]);
+                        $(".overview").append(x);
+                        $(".overview").append("<p>" +jsonObj[x] +"</p>");
+
+
+                        $("#select_department_selection").append("<option value=" +x+ ">" +jsonObj[x]+ "</option>")
+                    }
+
+                },
+                error: function(result){
+                    alert(result);
+                }
+            });
+            return false;
         }
     </script>
     <title>{% block title %}主页{% endblock %}</title>
