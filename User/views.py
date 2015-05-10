@@ -55,13 +55,14 @@ def Logout(request):
 
 @login_required(login_url='/login/')
 def index(request):
-    email = request.user.email
-    return render(request, 'User/index.html', {'email': email})
+    user = request.user
+    academys = Academy.objects.all()
+    return render(request, 'User/index.html', {'user': user, 'academys': academys})
 
 
 @login_required(login_url='/login/')
 def upload_file(request):
-    email = request.user.email
+    user = request.user
     user_name = request.user.username
     form = UploadFileFormFromModel()
     if request.method == 'POST':
@@ -92,19 +93,18 @@ def upload_file(request):
             form = UploadFileForm()
         return render_to_response('User/upload.html', {'form': form})
 
-    return render(request, 'User/upload.html', {'email': email, 'form': form})
+    return render(request, 'User/upload.html', {'user': user, 'form': form})
 
 
 @login_required(login_url='/login/')
 def download_file(request):
-    email = request.user.email
     user = request.user
     try:
         user_files = FileFromUser.objects.filter(user=user)
     except FileFromUser.DoesNotExist, ex:
         print ex
 
-    return render(request, 'User/download.html', {'email': email, 'user_files': user_files})
+    return render(request, 'User/download.html', {'user': user, 'user_files': user_files})
 
 
 @login_required(login_url='/login/')
@@ -145,14 +145,14 @@ def file_delete(request, file_id):
 
 @login_required(login_url='/login/')
 def share_file(request):
-    email = request.user.email
-    return render(request, 'User/share.html', {'email': email})
+    user = request.user
+    return render(request, 'User/share.html', {'user': user})
 
 
 @login_required(login_url='/login/')
 def list_file(request):
-    email = request.user.email
-    return render(request, 'User/list.html', {'email': email})
+    user = request.user
+    return render(request, 'User/list.html', {'user': user})
 
 
 def upload(request):

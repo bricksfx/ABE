@@ -135,11 +135,10 @@ class Department(models.Model):
 
     class Meta:
         verbose_name = "系"
-        verbose_name = "系"
+        verbose_name_plural = "系"
 
     def __unicode__(self):
         return self.name
-
 
 
 class DataOfUser(models.Model):
@@ -149,12 +148,12 @@ class DataOfUser(models.Model):
         ('2', '男'),
     }
     identityInfo = {
-        ('1', '学生'),
+        ('1', '本科生'),
         ('2', '研究生'),
         ('3', '教师')
     }
     user = models.OneToOneField(MyUser)
-    sex = models.CharField(verbose_name= "性别", max_length=1, choices=SexInfo)
+    sex = models.CharField(verbose_name = "性别", max_length=1, choices=SexInfo)
     academy = models.ForeignKey(Academy)
     major = models.ForeignKey(Department, verbose_name="所在系")
     identity = models.CharField(verbose_name="身份", max_length=1, choices=identityInfo)

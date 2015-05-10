@@ -43,3 +43,14 @@ body{
     padding-left: 40px;
   }
 }
+
+.info_improve div[class^=select] {
+    padding:10px;
+    border:1px solid #e5e5e5;
+}
+.info_improve .label_left{
+    display: block;
+    width:8em;
+    float: left;
+    word-wrap: break-word;
+}
