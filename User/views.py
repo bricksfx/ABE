@@ -178,6 +178,34 @@ def get_department(request):
         return JsonResponse(department_info)
 
 
+def data_valid(data):
+    errors = 0
+    key = []
+    value = []
+    for item in data:
+        if not data[item]:
+            errors  = 1
+            key.append(item)
+            value.append('0')
+    if errors == 0:
+        return {'errors': 0}
+    else:
+        key.append('errors')
+        value.append('1')
+        return dict(zip(key, value))
+
+
+@login_required(login_url='/login/')
+def improve_user_info(request):
+    if request.method == 'POST':
+        data = request.POST
+        return_data = data_valid(data)
+        if return_data['errors'] == '1':
+            return JsonResponse(return_data)
+        else:
+            pass
+        return JsonResponse({'errors': '0'})
+
 def upload(request):
     if request.method == 'POST':
         print request.POST

@@ -54,3 +54,12 @@ body{
     float: left;
     word-wrap: break-word;
 }
+/*#complete_user_info{*/
+    /*filter:alpha(opacity=50);*/
+    /*-moz-opacity:0.5;*/
+    /*-khtml-opacity: 0.5;*/
+    /*opacity: 0.5;*/
+/*}*/
+#complete_user_info img{
+    position:absolute;
+}

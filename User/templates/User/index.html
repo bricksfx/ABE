@@ -11,10 +11,11 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/json2.js' %}"></script>
     <script>
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}' }
+        });
         function getDepartment(){
-            $.ajaxSetup({
-                data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
-            });
+
             var academy = $("#select_academy_selection").val();
             $.ajax({
                 type:'POST',
@@ -25,24 +26,57 @@
                 success: function(result){
                     var jsonObj = new Array();
                     jsonObj = JSON.parse(result);
-                    var htmlreverse = "<div>test</div>";
-                    console.log(jsonObj);
+                    var htmlreverse = '<select id="select_department_selection">'+
+                      '<option value selected="selected">--------</option>';
                     for(var x in jsonObj){
-                        console.log(x);
-                        console.log(jsonObj[x]);
-                        $(".overview").append(x);
-                        $(".overview").append("<p>" +jsonObj[x] +"</p>");
-
-
-                        $("#select_department_selection").append("<option value=" +x+ ">" +jsonObj[x]+ "</option>")
+                        htmlreverse += "<option value=" +x+ ">" +jsonObj[x]+ "</option>";
                     }
-
+                    htmlreverse += "</select>";
+                    $("#select_department_selection").replaceWith(htmlreverse);
                 },
                 error: function(result){
                     alert(result);
                 }
             });
             return false;
+        }
+        function UserInfoSubmit(){
+            $("#submit_img").attr('class', 'test');
+            var sex = $("#select_sex_selection").val();
+            var academy = $("#select_academy_selection").val();
+            var department = $("#select_department_selection").val();
+            var identity = $("#select_identity_selection").val();
+            var UserInfo = {'sex':sex, 'academy':academy, 'department':department, 'identity': identity};
+            $("#errors").attr('class', 'sr-only');
+            for (var item in UserInfo){
+                $("#" + item).attr("class", "sr-only");
+            }
+            $("#UserInfoSubmit").attr('disabled', 'disabled');
+            console.log(UserInfo);
+            $.ajax({
+                type:'POST',
+                data:UserInfo,
+                url:"{% url 'user:improve_user_info' %}",
+                cache: false,
+                dataType: 'html',
+                success: function(result){
+                    var jsonObj = new Array();
+                    jsonObj = JSON.parse(result);
+                    if (jsonObj['errors'] == '1')
+                    {
+                        for (var item in jsonObj){
+                            console.log(item);
+                            $("#" + item).attr("class", "alert alert-danger");
+                        }
+                    }
+                },
+                error: function(result){
+                    alert("提交出现问题");
+                }
+            });
+            $("#submit_img").attr('class', 'sr-only');
+            $("#UserInfoSubmit").removeAttr('disabled','disabled');
+           return false;
         }
     </script>
     <title>{% block title %}主页{% endblock %}</title>
@@ -73,7 +107,7 @@
               <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.email }} <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
-                      <li><a href="#" data-toggle="modal" data-target="#exampleModal">完善账户信息</a></li>
+                      <li><a href="#" data-toggle="modal" data-target="#complete_user_info">完善账户信息</a></li>
                       <li><a href="#">修改密码</a></li>
                       <li><a href="{% url 'user:logout' %}">注销登录</a></li>
                   </ul>
@@ -82,24 +116,22 @@
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="complete_user_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="exampleModalLabel">完善账户信息</h4>
           </div>
+          <div class="sr-only" id="submit_img">
+            <img src="{% static 'img/super_saya.gif' %}"/>
+          </div>
           <div class="modal-body info_improve">
             <form>
-{#              <div class="form-group">#}
-{#                <label for="recipient-name" class="control-label">Recipient:</label>#}
-{#                <input type="text" class="form-control" id="recipient-name">#}
-{#              </div>#}
-{#              <div class="form-group">#}
-{#                <label for="message-text" class="control-label">Message:</label>#}
-{#                <textarea class="form-control" id="message-text"></textarea>#}
-{#              </div>#}
+              <div class="sr-only" id="errors" role="alert"><p>请完善以下信息</p></div>
               <div class="select_sex" id="select_sex">
+                <div class="sr-only" id="sex" role="alert"><p>请选择性别</p></div>
                 <label class="label_left" for="select_sex_selection">性别 :</label>
                 <select id="select_sex_selection">
                   <option value selected="selected">--------</option>
@@ -108,6 +140,7 @@
                 </select>
               </div>
               <div class="select_academy">
+              <div class="sr-only" id="academy" role="alert"><p>请选择学院</p></div>
                   <label class="label_left" for="select_academy_selection">学院 :</label>
                   <select id="select_academy_selection" onchange="getDepartment()">
                       <option value selected="selected">--------</option>
@@ -117,6 +150,7 @@
                   </select>
               </div>
               <div class="select_department">
+                  <div class="sr-only" id="department" role="alert"><p>请选择所在系</p></div>
                   <label class="label_left" for="select_department_selection">所在系:</label>
                   <select id="select_department_selection">
                       <option value selected="selected">--------</option>
@@ -124,6 +158,7 @@
               </div>
             <div class="select_identity">
                   <label class="label_left" for="select_identity_selection">身份:</label>
+                  <div class="sr-only" id="identity" role="alert"><p>请选择身份</p></div>
                   <select id="select_identity_selection">
                       <option value selected="selected">--------</option>
                       <option value="1">本科生</option>
@@ -135,7 +170,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-            <button type="button" class="btn btn-primary">完成</button>
+            <button type="button" id="UserInfoSubmit" class="btn btn-primary" onclick="UserInfoSubmit()">完成</button>
           </div>
         </div>
       </div>
