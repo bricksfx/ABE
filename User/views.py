@@ -203,7 +203,18 @@ def improve_user_info(request):
         if return_data['errors'] == '1':
             return JsonResponse(return_data)
         else:
-            pass
+            try:
+                user_info = DataOfUser()
+                user_info.user = request.user
+                user_info.sex = request.POST['sex']
+                print request.POST['sex']
+                user_info.academy_id = int(request.POST['academy'])
+                user_info.major_id = int(request.POST['department'])
+                user_info.identity = request.POST['identity']
+                user_info.save()
+            except Exception, ex:
+                return JsonResponse({"errors": "2"})
+
         return JsonResponse({'errors': '0'})
 
 def upload(request):

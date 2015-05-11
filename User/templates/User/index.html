@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     {% load staticfiles %}
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/index.css' %}" rel="stylesheet"/>
@@ -69,6 +70,13 @@
                             $("#" + item).attr("class", "alert alert-danger");
                         }
                     }
+                    else if(jsonObj['errors']  == '2'){
+                        alert("IO出现错误");
+                    }
+                    else{
+                        alert("提交成功");
+                    }
+                    $("#complete_user_info").modal('hide');
                 },
                 error: function(result){
                     alert("提交出现问题");
@@ -76,6 +84,7 @@
             });
             $("#submit_img").attr('class', 'sr-only');
             $("#UserInfoSubmit").removeAttr('disabled','disabled');
+
            return false;
         }
     </script>
@@ -135,8 +144,8 @@
                 <label class="label_left" for="select_sex_selection">性别 :</label>
                 <select id="select_sex_selection">
                   <option value selected="selected">--------</option>
-                  <option vlaue="2">男</option>
                   <option value="1">女</option>
+                  <option value="2">男</option>
                 </select>
               </div>
               <div class="select_academy">
@@ -163,7 +172,7 @@
                       <option value selected="selected">--------</option>
                       <option value="1">本科生</option>
                       <option value="2">研究生</option>
-                      <option value="2">教师</option>
+                      <option value="3">教师</option>
                   </select>
               </div>
             </form>
