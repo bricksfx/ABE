@@ -1,15 +1,70 @@
 {% extends 'User/index.html' %}
+{% block script %}
+    <script>
+        function set_file_share_object(){
+            $("#fileAttributeSelect").removeAttr("hidden");
+            $("#id_share").val("test");
+        }
+    </script>
+{% endblock %}
 {% block title %}文件上传{% endblock %}
 {% block intert-hook %}
     <div class="overview">
        <h1 class="page-header">文件上传</h1>
        <p>文件上传</p>
-        <div class="file-uploas">
+        <div class="file-upload">
             <form enctype="multipart/form-data" method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+                <p><label for="id_file">File:</label> <input id="id_file" name="file" type="file" /></p>
+                <p>
+                    <label for="id_share">Share:</label> <input id="id_share" maxlength="30" name="share" type="text" readonly="readonly" />
+                    <button class="btn btn-info" type="button" onclick="set_file_share_object()">设置文件共享对象</button>
+                </p>
                 <button class="btn btn-info" type="submit">上传</button>
             </form>
         </div>
+        <form class="form-horizontal" id="fileAttributeSelect" hidden="hidden">
+            <h3>选择文件分享的对象</h3>
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <p>选择性别</p>
+                    <div id="file_sex_select">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="SexCheckbox" value="1">女
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="SexCheckbox" value="1">男
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <p>选择身份</p>
+                    <div id="file_sex_select">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="IdentityCheckbox" value="">本科生
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="IdentityCheckbox" value="1">研究生
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="IdentityCheckbox" value="1">教师
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-9">
+                    <p>选择学院</p>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Sign in</button>
+                </div>
+            </div>
+        </form>
     </div>
 {% endblock %}
