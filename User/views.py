@@ -24,6 +24,7 @@ def Register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
+            print form.cleaned_data
             form.save()
             return HttpResponseRedirect('/login/')
     else:

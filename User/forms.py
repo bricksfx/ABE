@@ -17,6 +17,6 @@ class LoginForm(forms.Form):
 class UploadFileFormFromModel(ModelForm):
     class Meta:
         model = FileFromUser
-        fields = ['file', 'share']
+        fields = ['file', 'share', 'share_type']
 
 

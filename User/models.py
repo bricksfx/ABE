@@ -32,7 +32,7 @@ class MyUserManager(BaseUserManager):
         user = self.create_user(email,
             password=password,
             username=username,
-            date_of_birth=date_of_birth
+            date_of_birth=date_of_birth,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -96,13 +96,17 @@ def upload_file_path(instance, filename):
 
 
 class FileFromUser(models.Model):
-
+    Share_Info = {
+        ('1', '公开'),
+        ('2', '可共享'),
+        ('3', '私人')
+    }
     user = models.ForeignKey(MyUser)
     file = models.FileField(upload_to=upload_file_path)
     share = models.CharField(max_length=30)
     key = models.CharField(max_length=200)
     date_upload = models.DateTimeField(auto_now_add=True)
-    share_type = models.CharField(max_length=1, default='1')
+    share_type = models.CharField(max_length=1, choices=Share_Info)
 
     def __unicode__(self):
         return self.file.name.split('/')[-1]

@@ -12,10 +12,9 @@ from User.models import *
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    date_of_birth = forms.DateField( label="出生日期", widget=widgets.AdminDateWidget)
+    date_of_birth = forms.DateField(label="出生日期", widget=widgets.AdminDateWidget)
     password1 = forms.CharField(label='密码', widget=forms.PasswordInput)
     password2 = forms.CharField(label='确认密码', widget=forms.PasswordInput)
-
 
     class Meta:
         model = MyUser
@@ -33,6 +32,7 @@ class UserCreationForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
+        user.date_of_birth = self.cleaned_data["date_of_birth"]
         if commit:
             user.save()
         return user
