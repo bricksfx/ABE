@@ -161,6 +161,7 @@ def list_file(request):
     user = request.user
     return render(request, 'User/list.html', {'user': user, 'academys': academys})
 
+
 @login_required(login_url='/login/')
 def get_department(request):
     if request.method == 'POST':
@@ -179,13 +180,35 @@ def get_department(request):
         return JsonResponse(department_info)
 
 
+def get_department_multiple(request):
+    if request.method == 'POST':
+        print request.POST
+        academy = request.POST['academy']
+        academy_single = academy.split(',')
+        department_id = []
+        department_name = []
+        for item in academy_single:
+            try:
+                departments = Department.objects.filter(academy_id=int(item))
+            except Department.DoesNotExist, ex:
+                print ex
+            for department in departments:
+                department_id.append(department.id)
+                department_name.append(department.name)
+
+        department_info = dict(zip(department_id, department_name))
+        return JsonResponse(department_info)
+
+    return HttpResponse("test")
+
+
 def data_valid(data):
     errors = 0
     key = []
     value = []
     for item in data:
         if not data[item]:
-            errors  = 1
+            errors = 1
             key.append(item)
             value.append('0')
     if errors == 0:

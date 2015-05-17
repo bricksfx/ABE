@@ -16,4 +16,5 @@ urlpatterns = patterns('',
                        url('^test_upload/$', test_upload, name="test_upload"),
                        url('^get_department/$', get_department, name="get_department"),
                        url('^improve_user_info/$', improve_user_info, name='improve_user_info'),
+                       url('^get_department_multiple/$', get_department_multiple, name="get_department_multiple"),
                        )
