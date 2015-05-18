@@ -1,6 +1,7 @@
 {% extends 'User/index.html' %}
 {% block script %}
     <script>
+        var file_share_dander_info = ["file_share_sex", "file_share_identity", "file_share_academy", "file_share_department"];
         function set_file_share_object(){
             var share_type = $("#id_share_type").val();
             if (share_type == "2"){
@@ -26,7 +27,7 @@
                     console.log(result);
                     var htmlReplace = '<select multiple class="form-control" id="file_department_select">';
                     for (var i in result){
-                        htmlReplace += '<option value=' + 'i' + '>' + result[i] + '</option>';
+                        htmlReplace += '<option value=' + i + '>' + result[i] + '</option>';
                     }
                     htmlReplace += '</select>';
                     $("#file_department_select").replaceWith(htmlReplace);
@@ -35,6 +36,43 @@
                     console.log(result);
                 }
             });
+        }
+        function removeDangerInfo(){
+            for (var item in file_share_dander_info){
+                $("#" + file_share_dander_info[item]).attr("class", "sr-only");
+            }
+        }
+        function fileShareComplete(){
+            removeDangerInfo();
+            var flag = 1;
+            var sex = $("#file_sex_selection").val();
+            if (sex == ''){
+                $("#file_share_sex").attr("class", "alert alert-danger");
+                flag = 0;
+            }
+            var identity = $("#file_identity_select").val();
+            if (identity == ''){
+                $("#file_share_identity").attr("class", "alert alert-danger");
+                flag = 0;
+            }
+            var academy = $("#file_academy_select").val();
+            if (identity == ''){
+                $("#file_share_academy").attr("class", "alert alert-danger");
+                flag = 0;
+            }
+            var department = $("#file_department_select").val();
+            if (department == null){
+                $("#file_share_department").attr("class", "alert alert-danger");
+                flag = 0;
+            }
+            if (flag == 1) {
+                var file_share = sex + ":" + identity + ":" + academy + ":" + department;
+                $("#fileAttributeSelect").attr('hidden', 'hidden');
+            }
+            else{
+                alert("请完善文件共享信息");
+            }
+            $("#id_share").val(file_share);
         }
     </script>
 {% endblock %}
@@ -48,7 +86,7 @@
                 {% csrf_token %}
                 <p><label for="id_file">File:</label> <input id="id_file" name="file" type="file" /></p>
                 <p>
-                    <label for="id_share">Share:</label> <input id="id_share" maxlength="30" name="share" type="text" readonly="readonly" />
+                    <label for="id_share">Share:</label> <input id="id_share" maxlength="400" name="share" type="text" readonly="readonly" />
                     <p>
                         <label for="id_share_type">文件共享:</label>
                             <select id="id_share_type" name="share_type" onchange="set_file_share_object()">
@@ -69,9 +107,10 @@
             <div class="form-group">
                 <div class="col-sm-9">
                     <label>选择文件可共享对象的性别</label>
+                    <div class="sr-only" id="file_share_sex" role="alert"><p>请选择性别</p></div>
                     <select class="form-control" id="file_sex_selection">
                         <option value selected="selected">选择文件可共享对象的性别</option>
-                        <option vlaue="0">全选</option>
+                        <option value="0">全选</option>
                         <option value="1">女</option>
                         <option value="2">男</option>
                     </select>
@@ -80,17 +119,19 @@
             <div class="form-group">
                 <div class="col-sm-9">
                     <label>选择文件可共享对象的身份</label>
-                    <select class="form-control" id="file_identity_select">
+                    <div class="sr-only" id="file_share_identity" role="alert"><p>请选择身份</p></div>
+                    <select multiple class="form-control" id="file_identity_select">
                         <option value selected="selected">选择文件可共享对象的身份</option>
-                        <option value="1">本科生</option>
-                        <option value="2">研究生</option>
-                        <option value="3">教师</option>
+                        <option value="4">本科生</option>
+                        <option value="5">研究生</option>
+                        <option value="6">教师</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-9">
                     <label>选择文件可共享对象的所在学院</label>
+                <div class="sr-only" id="file_share_academy" role="alert"><p>请选择学院</p></div>
                     <select multiple class="form-control" id="file_academy_select">
                         {% for academy in academys %}
                             <option value="{{ academy.id }}">{{ academy.name }}</option>
@@ -102,6 +143,7 @@
             <div class="form-group">
                 <div class="col-xs-9">
                     <label>选择文件可共享对象的所在系</label>
+                    <div class="sr-only" id="file_share_department" role="alert"><p>请选择所在系</p></div>
                     <select multiple class="form-control" id="file_department_select">
 
                     </select>
@@ -109,7 +151,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-9">
-                    <button type="submit" class="btn btn-info">确定文件共享对象</button>
+                    <button type="button" class="btn btn-info" id="file_share_complete" onclick="fileShareComplete()">确定文件共享对象</button>
                 </div>
             </div>
         </form>
