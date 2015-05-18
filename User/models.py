@@ -103,7 +103,7 @@ class FileFromUser(models.Model):
     }
     user = models.ForeignKey(MyUser)
     file = models.FileField(upload_to=upload_file_path)
-    share = models.CharField(max_length=30)
+    share = models.CharField(max_length=400)
     key = models.CharField(max_length=200)
     date_upload = models.DateTimeField(auto_now_add=True)
     share_type = models.CharField(max_length=1, choices=Share_Info)
@@ -152,9 +152,9 @@ class DataOfUser(models.Model):
         ('2', '男'),
     }
     identityInfo = {
-        ('1', '本科生'),
-        ('2', '研究生'),
-        ('3', '教师')
+        ('4', '本科生'),
+        ('5', '研究生'),
+        ('6', '教师')
     }
     user = models.OneToOneField(MyUser)
     sex = models.CharField(verbose_name = "性别", max_length=1, choices=SexInfo)

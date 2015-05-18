@@ -83,14 +83,20 @@ class MyUserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
+class AcademyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'academy', 'name',)
+
 # Now register the new UserAdmin...
 admin.site.register(MyUser, MyUserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 # admin.site.unregister(Group)
 admin.site.register(FileFromUser)
-admin.site.register(Department)
-admin.site.register(Academy)
+admin.site.register(Department, DepartmentAdmin)
+admin.site.register(Academy, AcademyAdmin)
 admin.site.register(DataOfUser)
 
 

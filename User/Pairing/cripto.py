@@ -2,7 +2,6 @@ import gPair
 from random import randint
 from math import fmod 
 from keygen import KeyGene
-
 # RICORDA
 # Gli attributi vengono contati da 0 e non da 1!
 
@@ -13,8 +12,9 @@ class Crypto:
     publicKey = []
     masterKey = []
 
-    def __init__(self, n):
+    def __init__(self, n, username):
 
+        self.username = username
         self.attributi = range(n+1)
         print'self.attributi', self.attributi
         for i in self.attributi:

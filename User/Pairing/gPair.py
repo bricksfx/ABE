@@ -4,8 +4,8 @@
 
 import math
 
-p = 101
-g = 2
+p = 10289
+g = 5136
 g1 = 3
 
 potenze = []

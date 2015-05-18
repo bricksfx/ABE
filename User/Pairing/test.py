@@ -32,7 +32,7 @@ privatekey1 = cry.keygenerator.keygen(alb1)
 
 print "Private Key {} \n for {} ".format(privatekey1, alb1)
 
-decry = deCrypto(alb1,privatekey1)
+decry = deCrypto(alb1, privatekey1)
 print "decry---------------------", decry
 
 print "Mess: {}".format(decry.decifra(E, privatekey1))
