@@ -1,5 +1,6 @@
-import gPair
 from math import fmod
+
+from User import gPair
 
 
 class deCrypto:

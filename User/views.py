@@ -62,11 +62,6 @@ def index(request):
     return render(request, 'User/index.html', {'user': user, 'academys': academys})
 
 
-def share_to_attr(share):
-    pass
-
-def key_encrypt(attr):
-    pass
 
 @login_required(login_url='/login/')
 def upload_file(request):

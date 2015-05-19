@@ -1,7 +1,8 @@
-import gPair
 from random import randint
-from math import fmod 
+
+from User import gPair
 from keygen import KeyGene
+
 # RICORDA
 # Gli attributi vengono contati da 0 e non da 1!
 

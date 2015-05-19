@@ -1,7 +1,5 @@
-from math import fmod
-from random import randint
-from tree import tree, keyTree
-import gPair
+from User import gPair
+from User.tree import keyTree
 
 
 class KeyGene:
