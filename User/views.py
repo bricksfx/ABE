@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
-from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model, set_tmp_path, set_user_abe_key_path, file_key_encrypt
+from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model, set_tmp_path, set_user_abe_key_path, file_key_encrypt, generator_key_for_user
 from .admin import UserCreationForm
 from .decrypt import decrypt_file
 from .models import *
@@ -123,9 +123,10 @@ def file_down_single(request, file_id):
         file = FileFromUser.objects.get(id=file_id)
     except FileFromUser.DoesNotExist, ex:
         return HttpResponse("您所寻找的文件可能已被删除")
-
+    key = generator_key_for_user(request.user, file.user.id, file.id)
+    print key == file.key
     out_path = set_tmp_path(request.user.username) + file.file.path.split("/")[-1]
-    decrypt_file(file.key, file.file.path, out_path)
+    decrypt_file(key, file.file.path, out_path)
 
     def file_iterator(file_name, chunk_size=512):
         with open(file_name) as f:
@@ -249,10 +250,12 @@ def improve_user_info(request):
                 return JsonResponse({"errors": "2"})
         return JsonResponse({'errors': '0'})
 
+
 def upload(request):
     if request.method == 'POST':
         print request.POST
     return render(request, 'User/upload2.html')
+
 
 def test_upload(request):
 

@@ -1,12 +1,36 @@
 import time
 import os
 from django.core.files import File
+from tree import tree
 from ABE.settings import MEDIA_ROOT
 from cripto import Crypto
-from file_key_process import share_to_attr
+from decrypto import deCrypto
+from file_key_process import share_to_attr, generator_tree_for_user
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 import pickle
+
+
+def generator_key_for_user(user, user_id, file_id):
+    path = BASE_DIR + '/key_info/' + str(user_id) + '/' + 'cripto_info.txt'
+    cry = Crypto(400, "username")
+    key_info = open(path, 'rb')
+    key_file = pickle.load(key_info)
+    cry.publicKey = key_file['publicKey']
+    cry.masterkey = key_file['masterKey']
+    cry.attributi = key_file['attributi']
+    cry.keygenerator = key_file['keygenerator']
+    key_info.close()
+    path_in_file = BASE_DIR + '/file_key/' + str(file_id)
+    tree_of_user = generator_tree_for_user(user)
+    in_file = open(path_in_file, 'rb')
+    key_list = pickle.load(in_file)
+    privatekey = cry.keygenerator.keygen(tree_of_user)
+    key = ''
+    for E in key_list:
+        decry = deCrypto(tree_of_user, privatekey)
+        key += chr(decry.decifra(E, privatekey))
+    return key
 
 
 def file_key_encrypt(user_id, file_id, share, key):
@@ -20,7 +44,6 @@ def file_key_encrypt(user_id, file_id, share, key):
     cry.attributi = key_file['attributi']
     cry.keygenerator = key_file['keygenerator']
     key_info.close()
-    print cry
     attr = share_to_attr(share)
     key_list = []
     for mess in key:

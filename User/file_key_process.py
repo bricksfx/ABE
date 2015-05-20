@@ -1,6 +1,7 @@
 #coding=utf8
 from .tree import tree
 
+
 def generator_tree_for_user(user):
     alb1 = tree(4, [], [
         tree(1, [int(user.dataofuser.sex)], []),
@@ -8,6 +9,7 @@ def generator_tree_for_user(user):
         tree(1, [int(user.dataofuser.academy_id)+10], []),
         tree(1, [int(user.dataofuser.major_id)+50], []),
     ])
+    return alb1
 
 
 def share_to_attr(share):
@@ -28,7 +30,12 @@ def share_to_attr(share):
                 else:
                     attr.append(int(item))
         else:
-            attr.append(tmp[i])
+            if i == 2:
+                    attr.append(int(tmp[i]) + 10)
+            elif i == 3:
+                attr.append(int(tmp[i]) + 50)
+            else:
+                attr.append(int(tmp[i]))
     return attr
 
 def key_encrypt(attr):
