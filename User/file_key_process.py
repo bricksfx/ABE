@@ -11,6 +11,7 @@ def generator_tree_for_user(user):
 
 
 def share_to_attr(share):
+    share = str(share)
     attr = []
     tmp = share.split(":")
     print tmp
@@ -28,7 +29,7 @@ def share_to_attr(share):
                     attr.append(int(item))
         else:
             attr.append(tmp[i])
-    print attr
+    return attr
 
 def key_encrypt(attr):
     pass

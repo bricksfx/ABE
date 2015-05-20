@@ -1,8 +1,8 @@
-from User.tree import tree
-from User.cripto import Crypto
-from User.decrypto import deCrypto
+from tree import tree
+from cripto import Crypto
+from decrypto import deCrypto
 
-cry = Crypto(3)
+cry = Crypto(3, "test")
 
 # alb1 = tree(2,[0,1,2,3], [
 # tree(1,[0,1,2],[

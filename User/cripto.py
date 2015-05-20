@@ -1,6 +1,6 @@
 from random import randint
 
-from User import gPair
+import gPair
 from keygen import KeyGene
 
 # RICORDA
@@ -17,7 +17,6 @@ class Crypto:
 
         self.username = username
         self.attributi = range(n+1)
-        print'self.attributi', self.attributi
         for i in self.attributi:
             tmp = 0
             while True:

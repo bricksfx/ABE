@@ -1,5 +1,5 @@
-from User import gPair
-from User.tree import keyTree
+import gPair
+from tree import keyTree
 
 
 class KeyGene:
