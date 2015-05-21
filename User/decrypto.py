@@ -1,3 +1,4 @@
+#coding=utf8
 from math import fmod
 
 import gPair
@@ -40,4 +41,5 @@ class deCrypto:
         if self.albero.accettaAlbero(E[0]):
             return gPair.pro(E[1], gPair.inverse(self.decifraNodo(E, D, self.albero)))
         else:
+            print "属性验证没通过"
             return -1

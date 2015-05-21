@@ -9,6 +9,7 @@ def generator_tree_for_user(user):
         tree(1, [int(user.dataofuser.academy_id)+10], []),
         tree(1, [int(user.dataofuser.major_id)+50], []),
     ])
+    print "user tree info", user.dataofuser.sex, user.dataofuser.identity, int(user.dataofuser.academy_id)+10, int(user.dataofuser.major_id)+50
     return alb1
 
 
@@ -20,6 +21,8 @@ def share_to_attr(share):
     if tmp[0] == '0':
         attr.append(1)
         attr.append(2)
+    else:
+        attr.append(int(tmp[0]))
     for i in range(1, 4):
         if tmp[i].find(',') != -1:
             for item in tmp[i].split(','):

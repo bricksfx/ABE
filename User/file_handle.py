@@ -34,7 +34,6 @@ def generator_key_for_user(user, user_id, file_id):
 
 
 def file_key_encrypt(user_id, file_id, share, key):
-    print share
     path = BASE_DIR + '/key_info/' + str(user_id) + '/' + 'cripto_info.txt'
     cry = Crypto(400, "username")
     key_info = open(path, 'rb')
@@ -59,7 +58,6 @@ def file_key_encrypt(user_id, file_id, share, key):
 
 def set_user_abe_key_path(user_id):
     path = BASE_DIR + '/key_info/' + user_id + '/'
-    print path
     if not os.path.exists(path):
         os.makedirs(path)
     path_of_key = path + 'cripto_info.txt'
