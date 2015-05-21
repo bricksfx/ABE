@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
-from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model, set_tmp_path, set_user_abe_key_path, file_key_encrypt, generator_key_for_user
+from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model, set_tmp_path, set_user_abe_key_path, file_key_encrypt, generator_key_for_user, generator_key_for_user_self
 from .admin import UserCreationForm
 from .decrypt import decrypt_file
 from .models import *
@@ -77,7 +77,6 @@ def upload_file(request):
                 path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name.split("/")[-1]
                 key = create_key()
                 encrypt_file(key, path, path_of_model)
-
                 try:
                     new_model_file = open(path_of_model, 'r')
                 except IOError, ex:
@@ -96,8 +95,8 @@ def upload_file(request):
                     raise Http404
                 print new_file.share
                 print type(new_file.share)
-                file_key_encrypt(request.user.id, new_file.id, new_file.share, new_file.key)
-                return HttpResponse("文件上传成功")
+                file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key)
+
             elif form.cleaned_data['share_type'] == '1':
                 new_file = FileFromUser()
                 new_file.user = request.user
@@ -106,9 +105,32 @@ def upload_file(request):
                 new_file.key = "public"
                 new_file.file = request.FILES['file']
                 new_file.save()
-                return HttpResponse("文件上传成功")
+
             else:
-                pass
+                path = handle_uploaded_file(request.FILES['file'], request.user.username)
+                path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name.split("/")[-1]
+                key = create_key()
+                encrypt_file(key, path, path_of_model)
+                try:
+                    new_model_file = open(path_of_model, 'r')
+                except IOError, ex:
+                    print ex
+                if delete_file(path):
+                    new_file = FileFromUser()
+                    new_file.user = request.user
+                    new_file.share = form.cleaned_data['share']
+                    new_file.share_type = form.cleaned_data['share_type']
+                    new_file.key = key
+                    new_file.file = File(new_model_file)
+                    new_file.save()
+                    new_model_file.close()
+                    delete_file(path_of_model)
+                else:
+                    raise Http404
+                print new_file.share
+                print type(new_file.share)
+                file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key)
+            return HttpResponse("文件上传成功")
         else:
             form = UploadFileForm()
         return render_to_response('User/upload.html', {'form': form})
@@ -134,8 +156,10 @@ def file_down_single(request, file_id):
         file = FileFromUser.objects.get(id=file_id)
     except FileFromUser.DoesNotExist, ex:
         return HttpResponse("您所寻找的文件可能已被删除")
-    key = generator_key_for_user(request.user, file.user.id, file.id)
-    print key == file.key
+    if request.user == file.user or file.share_type == '3':
+        key = generator_key_for_user_self(request.user, file.id)
+    else:
+        key = generator_key_for_user(request.user, file.user.id, file.id)
     out_path = set_tmp_path(request.user.username) + file.file.path.split("/")[-1]
     decrypt_file(key, file.file.path, out_path)
 
@@ -148,7 +172,10 @@ def file_down_single(request, file_id):
                 else:
                     break
         delete_file(file_name)
-    the_file_name = out_path
+    if file.share_type == '2' or file.share_type == '3':
+        the_file_name = out_path
+    elif file.share_type == '1':
+        the_file_name = file.file.path
     response = StreamingHttpResponse(file_iterator(the_file_name))
     response['Content-Type'] = 'application/octet-stream'
     response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
