@@ -7,6 +7,14 @@
             if (share_type == "2"){
                 $("#fileAttributeSelect").removeAttr('hidden', 'hidden');
             }
+            else if(share_type == '1'){
+                $("#fileAttributeSelect").attr('hidden', 'hidden');
+                $("#id_share").val("public");
+            }
+            else if(share_type == '3'){
+                $("#fileAttributeSelect").attr('hidden', 'hidden');
+                $("#id_share").val("private");
+            }
         }
         function GetMultipleDepartment(){
             var academy = $("#file_academy_select").val();

@@ -72,32 +72,43 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadFileFormFromModel(request.POST, request.FILES)
         if form.is_valid():
-            path = handle_uploaded_file(request.FILES['file'], request.user.username)
-            path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name.split("/")[-1]
-            key = create_key()
-            encrypt_file(key, path, path_of_model)
+            if form.cleaned_data['share_type'] == '2':
+                path = handle_uploaded_file(request.FILES['file'], request.user.username)
+                path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name.split("/")[-1]
+                key = create_key()
+                encrypt_file(key, path, path_of_model)
 
-            try:
-                new_model_file = open(path_of_model, 'r')
-            except IOError, ex:
-                print ex
-            if delete_file(path):
+                try:
+                    new_model_file = open(path_of_model, 'r')
+                except IOError, ex:
+                    print ex
+                if delete_file(path):
+                    new_file = FileFromUser()
+                    new_file.user = request.user
+                    new_file.share = form.cleaned_data['share']
+                    new_file.share_type = form.cleaned_data['share_type']
+                    new_file.key = key
+                    new_file.file = File(new_model_file)
+                    new_file.save()
+                    new_model_file.close()
+                    delete_file(path_of_model)
+                else:
+                    raise Http404
+                print new_file.share
+                print type(new_file.share)
+                file_key_encrypt(request.user.id, new_file.id, new_file.share, new_file.key)
+                return HttpResponse("文件上传成功")
+            elif form.cleaned_data['share_type'] == '1':
                 new_file = FileFromUser()
                 new_file.user = request.user
                 new_file.share = form.cleaned_data['share']
                 new_file.share_type = form.cleaned_data['share_type']
-                new_file.key = key
-                new_file.file = File(new_model_file)
+                new_file.key = "public"
+                new_file.file = request.FILES['file']
                 new_file.save()
-                new_model_file.close()
-                delete_file(path_of_model)
+                return HttpResponse("文件上传成功")
             else:
-                raise Http404
-            print new_file.share
-            print type(new_file.share)
-            file_key_encrypt(request.user.id, new_file.id, new_file.share, new_file.key)
-            return HttpResponse("文件上传成功")
-
+                pass
         else:
             form = UploadFileForm()
         return render_to_response('User/upload.html', {'form': form})
@@ -265,3 +276,9 @@ def test_upload(request):
             print handle_uploaded_file(request.FILES['files[]'], request.user.username)
             return JsonResponse({"test": "test"})
     return render(request, 'User/test_upload.html', {})
+
+@login_required(login_url='/login/')
+def message_list(request):
+    academys = Academy.objects.all()
+    user = request.user
+    return render(request, 'User/message_list.html', {'user': user, 'academys': academys})
