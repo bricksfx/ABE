@@ -95,7 +95,7 @@ def upload_file(request):
                     raise Http404
                 print new_file.share
                 print type(new_file.share)
-                file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key)
+                file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key, 2)
 
             elif form.cleaned_data['share_type'] == '1':
                 new_file = FileFromUser()
@@ -129,7 +129,7 @@ def upload_file(request):
                     raise Http404
                 print new_file.share
                 print type(new_file.share)
-                file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key)
+                file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key, 3)
             return HttpResponse("文件上传成功")
         else:
             form = UploadFileForm()
@@ -156,14 +156,15 @@ def file_down_single(request, file_id):
         file = FileFromUser.objects.get(id=file_id)
     except FileFromUser.DoesNotExist, ex:
         return HttpResponse("您所寻找的文件可能已被删除")
-    if request.user == file.user or file.share_type == '3':
-        key = generator_key_for_user_self(request.user, file.id)
-    else:
-        key = generator_key_for_user(request.user, file.user.id, file.id)
-    out_path = set_tmp_path(request.user.username) + file.file.path.split("/")[-1]
-    decrypt_file(key, file.file.path, out_path)
+    if file.share_type != '1':
+        if request.user == file.user or file.share_type == '3':
+            key = generator_key_for_user_self(request.user, file.id)
+        else:
+            key = generator_key_for_user(request.user, file.user.id, file.id)
+        out_path = set_tmp_path(request.user.username) + file.file.path.split("/")[-1]
+        decrypt_file(key, file.file.path, out_path)
 
-    def file_iterator(file_name, chunk_size=512):
+    def file_iterator(file_name, chunk_size=512, type='1'):
         with open(file_name) as f:
             while True:
                 c = f.read(chunk_size)
@@ -171,15 +172,21 @@ def file_down_single(request, file_id):
                     yield c
                 else:
                     break
-        delete_file(file_name)
+        if type != '1':
+            delete_file(file_name)
     if file.share_type == '2' or file.share_type == '3':
         the_file_name = out_path
+        response = StreamingHttpResponse(file_iterator(the_file_name, type='2'))
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+        return response
     elif file.share_type == '1':
         the_file_name = file.file.path
-    response = StreamingHttpResponse(file_iterator(the_file_name))
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
-    return response
+        response = StreamingHttpResponse(file_iterator(the_file_name, type='1'))
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+        return response
+
 
 @login_required(login_url='/login/')
 def file_delete(request, file_id):
