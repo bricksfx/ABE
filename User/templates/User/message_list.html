@@ -1,7 +1,97 @@
 {% extends 'User/index.html' %}
+{% load staticfiles %}
+{% block css_block %}
+<link href="{% static 'css/message_list.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+{% block script %}
+<script>
+    function new_message_submit(){
+        var content = $("#new_message #content_input").val();
+        console.log(content);
+    }
+</script>
+{% endblock %}
 {% block title %}消息列表{% endblock %}
+
 {% block intert-hook %}
+
     <div class="overview">
        <h1 class="page-header">消息列表</h1>
+       <div class="container-fluid">
+
+           <div class="row">
+               <div class="col-sm-12 col-md-9 new_message">
+                   <form>
+                       <div class="form-group">
+                           <label for="content_input">新的消息</label>
+                           <textarea class="form-control" id="content_input" maxlength="250" placeholder="输入您发布的消息(不超过250字)" required autofocus></textarea>
+                       </div>
+                   </form>
+                   <button type="button" id="new_message_submit" class="btn btn-info" onclick="new_message_submit()">发布</button>
+               </div>
+           </div>
+
+           <div class="row">
+               {% for message in messages %}
+               <div class="col-sm-12 col-md-9 message-list-single">
+                   <div class="row">
+                       <div class="col-xs-3 col-sm-2 col-md-2 message-list-top-head-img">
+                           <div class="head-img">
+                                <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
+                           </div>
+                       </div>
+                       <div class="col-xs-9 col-sm-8 col-md-9 message-list-top-content">
+                           <div class="user">
+                               <p><span>{{ message.user.username }} </span>发布了信息</p>
+                           </div>
+                           <div class="content">
+                               <div class="content-detail">
+                                   <p>{{ message.content }}</p>
+                               </div>
+                           </div>
+                           <div class="file-plugin">
+                               {% if message.file_plug_in %}
+                                    <button class="btn btn-info btn-xs"><a href="#">附件下载</a></button><span> {{ message.file_plug_in }}</span>
+                               {% endif %}
+                           </div>
+                           <div class="date-info">
+                               <p><span>{{ message.date }} 发布</span><button class="btn btn-info btn-xs">回复</button></p>
+                           </div>
+                       </div>
+{#                       <div class="col-xs-10 col-sm-10 col-md-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-2">#}
+{#                           <div class="row message-list-inline">#}
+{#                               <div class="col-xs-3 col-sm-3 col-md-2 message-list-inline-head-img-field">#}
+{#                                   <div class="head-img">#}
+{#                                        <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">#}
+{#                                   </div>#}
+{#                               </div>#}
+{#                               <div class="col-xs-9 col-sm-8 col-md-9 message-list-inline-content">#}
+{#                                   <div class="user">#}
+{#                                       <p><span style="color: #428bca">旭子 </span>回复了<span>茄子</span></p>#}
+{#                                   </div>#}
+{#                                   <div class="content">#}
+{#                                       <div class="content-detail">#}
+{#                                           <p>你又被强奸了</p>#}
+{#                                       </div>#}
+{#                                   </div>#}
+{#                                   <div class="date-info">#}
+{#                                       <p><span>2015-5-22 22:54 发布</span><button class="btn btn-info btn-xs">回复</button></p>#}
+{#                                   </div>#}
+{#                               </div>#}
+{#                           </div>#}
+{#                       </div>#}
+                   </div>
+               </div>
+               {% endfor %}
+           </div>
+
+
+
+
+
+
+
+
+       </div>
     </div>
 {% endblock %}

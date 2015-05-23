@@ -83,11 +83,16 @@ class MyUserAdmin(UserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
+
 class AcademyAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
+
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('id', 'academy', 'name',)
+
+class MessageListAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'content', 'file_plug_in', 'date')
 
 # Now register the new UserAdmin...
 admin.site.register(MyUser, MyUserAdmin)
@@ -98,6 +103,8 @@ admin.site.register(FileFromUser)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Academy, AcademyAdmin)
 admin.site.register(DataOfUser)
+admin.site.register(MessageList, MessageListAdmin)
+admin.site.register(MessageListInline)
 
 
 

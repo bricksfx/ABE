@@ -122,6 +122,7 @@ class FileFromUser(models.Model):
         elif (size >= 1000000000) and (size <= 1000000000000):
             return str(round(size/1000000000.0, 2)) + u"GB"
 
+
 class Academy(models.Model):
 
     name = models.CharField(verbose_name="学院名称", max_length=100)
@@ -157,7 +158,7 @@ class DataOfUser(models.Model):
         ('6', '教师')
     }
     user = models.OneToOneField(MyUser)
-    sex = models.CharField(verbose_name = "性别", max_length=1, choices=SexInfo)
+    sex = models.CharField(verbose_name="性别", max_length=1, choices=SexInfo)
     academy = models.ForeignKey(Academy)
     major = models.ForeignKey(Department, verbose_name="所在系")
     identity = models.CharField(verbose_name="身份", max_length=1, choices=identityInfo)
@@ -168,3 +169,32 @@ class DataOfUser(models.Model):
     class Meta:
         verbose_name = "用户信息"
         verbose_name_plural = "用户信息"
+
+
+class MessageList(models.Model):
+    user = models.ForeignKey(MyUser)
+    content = models.CharField(max_length=1000)
+    date = models.DateTimeField(auto_now_add=True)
+    file_plug_in = models.ForeignKey(FileFromUser, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = "信息列表"
+        verbose_name_plural = "信息列表"
+
+
+class MessageListInline(models.Model):
+    messageList = models.ForeignKey(MessageList)
+    content = models.CharField(max_length=125)
+    user = models.ForeignKey(MyUser)
+    user_pre = models.CharField(verbose_name="上一个用户", max_length=30, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.user.username + "->"
+
+    class Meta:
+        verbose_name = "回复信息"
+        verbose_name_plural = "回复信息"

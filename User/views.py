@@ -62,6 +62,8 @@ def index(request):
     return render(request, 'User/index.html', {'user': user, 'academys': academys})
 
 
+def add_file_to_message_list(user, content, file_plugin):
+    pass
 
 @login_required(login_url='/login/')
 def upload_file(request):
@@ -178,13 +180,13 @@ def file_down_single(request, file_id):
         the_file_name = out_path
         response = StreamingHttpResponse(file_iterator(the_file_name, type='2'))
         response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name.split("/")[-1].encode('utf-8'))
         return response
     elif file.share_type == '1':
         the_file_name = file.file.path
         response = StreamingHttpResponse(file_iterator(the_file_name, type='1'))
         response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name.split("/")[-1].encode('utf-8'))
         return response
 
 
@@ -313,6 +315,11 @@ def test_upload(request):
 
 @login_required(login_url='/login/')
 def message_list(request):
+    message = MessageList.objects.all()
+    messages = []
+    for item in message:
+        messages.append(item)
+
     academys = Academy.objects.all()
     user = request.user
-    return render(request, 'User/message_list.html', {'user': user, 'academys': academys})
+    return render(request, 'User/message_list.html', {'user': user, 'academys': academys, 'messages': messages})
