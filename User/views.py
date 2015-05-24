@@ -18,6 +18,7 @@ from django.core.files import File
 from django.http import StreamingHttpResponse
 from django.http import JsonResponse
 
+identityInfo = {u'4': u'本科生', u'5': u'研究生', u'6': u'教师'}
 
 def Register(request):
 
@@ -30,6 +31,7 @@ def Register(request):
     else:
         form = UserCreationForm()
     return render(request, 'User/register.html', {'form': form})
+
 
 @csrf_protect
 def Login(request):
@@ -62,8 +64,68 @@ def index(request):
     return render(request, 'User/index.html', {'user': user, 'academys': academys})
 
 
-def add_file_to_message_list(user, content, file_plugin):
-    pass
+def add_file_to_message_list(user, file_plugin):
+    content = ''
+    if file_plugin.share.find(':') != -1:
+        attr = file_plugin.share.split(":")
+        sex = attr[0]
+        academys_row = attr[2]
+        department_row = attr[3]
+        identitys_row = attr[1]
+        academys = []
+        departments = []
+        identitys = []
+        content = u'给 '
+        if academys_row.find(','):
+            academys.extend(academys_row.split(','))
+        else:
+            academys.append(academys_row)
+
+        if department_row.find(','):
+            departments.extend(department_row.split(','))
+        else:
+            departments.append(department_row)
+        try:
+            for item in academys:
+                academy = Academy.objects.get(id=int(item))
+                content += (academy.name + ',')
+        except Academy.DoesNotExist, ex:
+            print ex
+        try:
+            for item in departments:
+                department = Department.objects.get(id=int(item))
+                content += (department.name + u'专业,')
+        except Department.DoesNotExist, ex:
+            print ex
+        content += u" 的"
+        if identitys_row.find(','):
+            identitys.extend(identitys_row.split(','))
+        else:
+            identitys.append(identitys_row)
+        try:
+            for item in identitys:
+                identity = identityInfo[item]
+                content += (identity + u',')
+        except KeyError, ex:
+            print ex
+        content += u'分享了文件.'
+        if attr[0] != '0':
+            content += u'备注：'
+            if attr[0] == '1':
+                content += u'只有女生可以下载'
+            elif attr[0] == '2':
+                content += u'只有男生可以下载'
+
+
+
+    if file_plugin.share == 'public':
+        content = u'分享了共享文件给所有人'
+    message = MessageList()
+    message.user = user
+    message.content = content
+    message.file_plug_in = file_plugin
+    message.save()
+
 
 @login_required(login_url='/login/')
 def upload_file(request):
@@ -98,6 +160,7 @@ def upload_file(request):
                 print new_file.share
                 print type(new_file.share)
                 file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key, 2)
+                add_file_to_message_list(request.user, new_file)
 
             elif form.cleaned_data['share_type'] == '1':
                 new_file = FileFromUser()
@@ -107,7 +170,7 @@ def upload_file(request):
                 new_file.key = "public"
                 new_file.file = request.FILES['file']
                 new_file.save()
-
+                add_file_to_message_list(request.user, new_file)
             else:
                 path = handle_uploaded_file(request.FILES['file'], request.user.username)
                 path_of_model = make_file_path_for_model(request.user.username) + request.FILES['file'].name.split("/")[-1]
@@ -132,6 +195,7 @@ def upload_file(request):
                 print new_file.share
                 print type(new_file.share)
                 file_key_encrypt(request.user, new_file.id, new_file.share, new_file.key, 3)
+
             return HttpResponse("文件上传成功")
         else:
             form = UploadFileForm()
@@ -159,10 +223,15 @@ def file_down_single(request, file_id):
     except FileFromUser.DoesNotExist, ex:
         return HttpResponse("您所寻找的文件可能已被删除")
     if file.share_type != '1':
-        if request.user == file.user or file.share_type == '3':
+        if (file.share_type == '2' and request.user == file.user) or \
+                (file.share_type == '3' and request.user == file.user):
             key = generator_key_for_user_self(request.user, file.id)
         else:
-            key = generator_key_for_user(request.user, file.user.id, file.id)
+            try:
+                key = generator_key_for_user(request.user, file.user.id, file.id)
+            except Exception, ex:
+                print ex
+                return HttpResponse("文件下载出现问题，可能您的属性并不在文件分享对象之内")
         out_path = set_tmp_path(request.user.username) + file.file.path.split("/")[-1]
         decrypt_file(key, file.file.path, out_path)
 

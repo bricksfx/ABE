@@ -6,7 +6,7 @@
 {% block script %}
 <script>
     function new_message_submit(){
-        var content = $("#new_message #content_input").val();
+        var content = $(".new_message #content_input").val();
         console.log(content);
     }
 </script>
@@ -37,12 +37,24 @@
                    <div class="row">
                        <div class="col-xs-3 col-sm-2 col-md-2 message-list-top-head-img">
                            <div class="head-img">
-                                <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
+                               {% if message.file_plug_in %}
+                               <img src="{% static 'img/file.png' %}" class="img-thumbnail">
+                               {% else %}
+                               <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
+                               {% endif %}
                            </div>
                        </div>
                        <div class="col-xs-9 col-sm-8 col-md-9 message-list-top-content">
                            <div class="user">
-                               <p><span>{{ message.user.username }} </span>发布了信息</p>
+                               <p>
+                                   <span>{{ message.user.username }} </span>
+                                   {% if message.file_plug_in %}
+                                       分享了文件
+                                   {% else %}
+                                       发布了信息
+                                   {% endif %}
+
+                               </p>
                            </div>
                            <div class="content">
                                <div class="content-detail">
@@ -51,7 +63,7 @@
                            </div>
                            <div class="file-plugin">
                                {% if message.file_plug_in %}
-                                    <button class="btn btn-info btn-xs"><a href="#">附件下载</a></button><span> {{ message.file_plug_in }}</span>
+                                    <button class="btn btn-info btn-xs"><a href="{% url 'user:file_down_single' message.file_plug_in.id %}" target="_blank">附件下载</a></button><span> <a href="{% url 'user:file_down_single' message.file_plug_in.id %}" target="_blank">{{ message.file_plug_in }}</a></span>
                                {% endif %}
                            </div>
                            <div class="date-info">
