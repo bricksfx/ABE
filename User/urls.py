@@ -18,4 +18,5 @@ urlpatterns = patterns('',
                        url('^improve_user_info/$', improve_user_info, name='improve_user_info'),
                        url('^get_department_multiple/$', get_department_multiple, name="get_department_multiple"),
                        url('^message_list/$', message_list, name="message_list"),
+                       url('^upload_new_message/$', upload_new_message, name='upload_new_message'),
                        )

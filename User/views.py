@@ -392,3 +392,19 @@ def message_list(request):
     academys = Academy.objects.all()
     user = request.user
     return render(request, 'User/message_list.html', {'user': user, 'academys': academys, 'messages': messages})
+
+@login_required(login_url='/login/')
+def upload_new_message(request):
+    if request.method == 'POST':
+        if request.POST['content'] == '':
+            return HttpResponse("0")
+        try:
+            new_message = MessageList()
+            new_message.user = request.user
+            new_message.content = request.POST['content']
+            new_message.save()
+        except Exception, ex:
+            print ex
+            return HttpResponse("1")
+        return JsonResponse({'username': new_message.user.username, 'content': new_message.content, 'date': new_message.date})
+    return HttpResponse("upload new message")

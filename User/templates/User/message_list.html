@@ -6,15 +6,86 @@
 {% block script %}
 <script>
     function new_message_submit(){
+        var modal = $("#modal");
+        modal.attr('id');
+        modal.find("btn").removeClass('btn-info').addClass('btn-danger').html('失败');
+
+        $("#new_message_submit").attr('disabled', 'disabled');
+        $("#new_message_blank_error").attr('class', 'sr-only');
         var content = $(".new_message #content_input").val();
-        console.log(content);
+        if (content == ''){
+            $("#new_message_blank_error").attr('class', 'alert alert-danger');
+            $("#new_message_submit").removeAttr('disabled');
+        }
+        else{
+            $.ajax({
+                type: 'POST',
+                data: {'content': content},
+                url: "{% url 'user:upload_new_message' %}",
+                cache: false,
+                dataType: 'html',
+                success: function(result){
+                    if (result == '0')
+                    {
+                        alert("输入不能为空,绕过前端还有后端");
+                        $("#new_message_submit").attr('disabled', 'disabled');
+                    }
+                    if (result == '1')
+                    {
+                        alert("数据库存储出现问题, 请联系管理员 电话。。。。。。");
+                        $("#new_message_submit").attr('disabled', 'disabled');
+                    }
+                    else{
+                        console.log(result);
+                        $("#new_message_submit").attr('disabled', 'disabled');
+                    }
+                },
+                error: function(result){
+                    alert("提交出现问题");
+                }
+            });
+            return false;
+        }
+    }
+    function get_inline_reply_info(obj){
+        console.log($(obj).attr('id'));
+        console.log("test");
+        var reply_info = $(this).attr("id");
+        console.log(reply_info);
     }
 </script>
 {% endblock %}
 {% block title %}消息列表{% endblock %}
-
+{% block modal %}
+    <div class="modal fade" id="message_reply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">回复</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="id_content" class="control-label">内容:</label>
+                            <div class="sr-only" id="miss_content" role="alert">
+                                <p>评论内容不能为空</p>
+                            </div>
+                            <textarea class="form-control" id="id_content" maxlength="125" placeholder="请输入回复的内容（不超过125个字）"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" id="comment-submit" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 {% block intert-hook %}
-
     <div class="overview">
        <h1 class="page-header">消息列表</h1>
        <div class="container-fluid">
@@ -23,7 +94,9 @@
                <div class="col-sm-12 col-md-9 new_message">
                    <form>
                        <div class="form-group">
+
                            <label for="content_input">新的消息</label>
+                           <p class="sr-only" id="new_message_blank_error" role="alert">输入内容不能为空</p>
                            <textarea class="form-control" id="content_input" maxlength="250" placeholder="输入您发布的消息(不超过250字)" required autofocus></textarea>
                        </div>
                    </form>
@@ -31,9 +104,9 @@
                </div>
            </div>
 
-           <div class="row">
+           <div class="row message-list">
                {% for message in messages %}
-               <div class="col-sm-12 col-md-9 message-list-single">
+               <div class="col-sm-12 col-md-9 message-list-single" id="message_id_{{ message.id }}">
                    <div class="row">
                        <div class="col-xs-3 col-sm-2 col-md-2 message-list-top-head-img">
                            <div class="head-img">
@@ -67,31 +140,40 @@
                                {% endif %}
                            </div>
                            <div class="date-info">
-                               <p><span>{{ message.date }} 发布</span><button class="btn btn-info btn-xs">回复</button></p>
+                               <p>
+                                   <span>{{ message.date }} 发布</span>
+                                   <button class="btn btn-info btn-xs" id="btnInline {{ message.id }} {{ message.user.username }}" data-toggle="modal" onclick="get_inline_reply_info(this)" data-target="#message_reply">回复</button>
+                               </p>
                            </div>
                        </div>
-{#                       <div class="col-xs-10 col-sm-10 col-md-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-2">#}
-{#                           <div class="row message-list-inline">#}
-{#                               <div class="col-xs-3 col-sm-3 col-md-2 message-list-inline-head-img-field">#}
-{#                                   <div class="head-img">#}
-{#                                        <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">#}
-{#                                   </div>#}
-{#                               </div>#}
-{#                               <div class="col-xs-9 col-sm-8 col-md-9 message-list-inline-content">#}
-{#                                   <div class="user">#}
-{#                                       <p><span style="color: #428bca">旭子 </span>回复了<span>茄子</span></p>#}
-{#                                   </div>#}
-{#                                   <div class="content">#}
-{#                                       <div class="content-detail">#}
-{#                                           <p>你又被强奸了</p>#}
-{#                                       </div>#}
-{#                                   </div>#}
-{#                                   <div class="date-info">#}
-{#                                       <p><span>2015-5-22 22:54 发布</span><button class="btn btn-info btn-xs">回复</button></p>#}
-{#                                   </div>#}
-{#                               </div>#}
-{#                           </div>#}
-{#                       </div>#}
+                       <div class="col-xs-10 col-sm-10 col-md-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-2">
+                           {% for message_inline in message.messagelistinline_set.all %}
+                           <div class="row message-list-inline">
+                               <div class="col-xs-3 col-sm-3 col-md-2 message-list-inline-head-img-field">
+                                   <div class="head-img">
+                                        <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
+                                   </div>
+                               </div>
+                               <div class="col-xs-9 col-sm-8 col-md-9 message-list-inline-content">
+                                   <div class="user">
+                                       <p><span style="color: #428bca">{{ message_inline.user.username }} </span>回复 <span>{{ message_inline.user_pre }}</span></p>
+                                   </div>
+                                   <div class="content">
+                                       <div class="content-detail">
+                                           <p>{{ message_inline.content }}</p>
+                                       </div>
+                                   </div>
+                                   <div class="date-info">
+                                       <p>
+                                           <span>{{ message_inline.date }} 发布</span>
+                                           <button class="btn btn-info btn-xs" id="btnInline {{ message.id }} {{ message_inline.user.username }}" data-toggle="modal" data-target="#message_reply" onclick="get_inline_reply_info(this)">回复</button>
+
+                                       </p>
+                                   </div>
+                               </div>
+                           </div>
+                           {% endfor %}
+                       </div>
                    </div>
                </div>
                {% endfor %}
