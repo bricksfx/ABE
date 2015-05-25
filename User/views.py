@@ -20,6 +20,19 @@ from django.http import JsonResponse
 
 identityInfo = {u'4': u'本科生', u'5': u'研究生', u'6': u'教师'}
 
+
+@login_required(login_url='/login/')
+def user_info_if_complete_authenticate(request):
+
+    if request.method == 'POST':
+        try:
+            user_info = DataOfUser.objects.get(user=request.user)
+        except DataOfUser.DoesNotExist, ex:
+            print ex
+            return HttpResponse('1')
+        return HttpResponse("2")
+    return HttpResponse("error")
+
 def Register(request):
 
     if request.method == "POST":
@@ -48,7 +61,7 @@ def Login(request):
             else:
                 return HttpResponse("您的号被封了, 请联系本站管理员")
         else:
-            return HttpResponse("请注册")
+            return HttpResponse("您的用户名和密码不符合")
     return render(request, 'User/login.html', {'form': form})
 
 
@@ -134,6 +147,11 @@ def upload_file(request):
     academys = Academy.objects.all()
     form = UploadFileFormFromModel()
     if request.method == 'POST':
+        try:
+            info = DataOfUser.objects.get(user=request.user)
+        except DataOfUser.DoesNotExist, ex:
+            print ex
+            return HttpResponse("请完善用户信息")
         form = UploadFileFormFromModel(request.POST, request.FILES)
         if form.is_valid():
             if form.cleaned_data['share_type'] == '2':
@@ -393,6 +411,7 @@ def message_list(request):
     user = request.user
     return render(request, 'User/message_list.html', {'user': user, 'academys': academys, 'messages': messages})
 
+
 @login_required(login_url='/login/')
 def upload_new_message(request):
     if request.method == 'POST':
@@ -406,5 +425,34 @@ def upload_new_message(request):
         except Exception, ex:
             print ex
             return HttpResponse("1")
-        return JsonResponse({'username': new_message.user.username, 'content': new_message.content, 'date': new_message.date})
+
+        return render(request, 'User/message_single.html', {'message': new_message})
     return HttpResponse("upload new message")
+
+
+@login_required(login_url='/login/')
+def upload_new_inline_message(request):
+    if request.method == 'POST':
+        user_info = request.POST['info'].split(' ')
+        content = request.POST['content']
+        print user_info
+        try:
+            message = MessageList.objects.get(id=int(user_info[1]))
+        except MessageList.DoesNotExist, ex:
+            print ex
+            return HttpResponse('1')
+        inline = MessageListInline()
+        inline.user = request.user
+        inline.content = content
+        inline.messageList = message
+        if user_info[0] != 'btnTop' and request.user.username != user_info[2]:
+            inline.user_pre = user_info[2]
+        try:
+            inline.save()
+        except Exception, ex:
+            print ex
+            return HttpResponse("2")
+        return render(request, 'User/message_inline_single.html', {'message_inline': inline})
+    return HttpResponse("upload_new_message_inline")
+
+#TODO phonegap

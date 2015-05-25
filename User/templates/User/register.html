@@ -5,12 +5,19 @@
 {# Load CSS and JavaScript #}
 <title>注册</title>
 <link href="{% static 'css/login.css' %}" rel="stylesheet"/>
-<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
-<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
-<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
-<script type="text/javascript" src="/admin/jsi18n/"></script>
-<script type="text/javascript" src="/static/admin/js/core.js"></script>
+{#<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>#}
+{#<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />#}
+{#<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />#}
+{#<script type="text/javascript" src="/admin/jsi18n/"></script>#}
+{#<script type="text/javascript" src="/static/admin/js/core.js"></script>#}
 <script src="{% static 'jquery/jquery.min.js' %}"></script>
+<script>
+{#    alert("请使用chrome firefox sarfri 等支持html5的新版本浏览器");#}
+    $(document).ready(function(){
+    alert("test");
+    $("#id_date_of_birth").removeAttr('type').attr('type', 'date');
+});
+</script>
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 
@@ -19,15 +26,27 @@
 
 {# Display a form #}
 <form class="form-signin" method="post" class="form">
-  <h2>注册</h2>
-  {% csrf_token %}
-  {% bootstrap_form form %}
-  {{ form.media }}
-  {% buttons %}
-    <button type="submit" class="btn btn-primary btn-lg btn-block">
-      提交
-    </button>
-  {% endbuttons %}
+
+      <h2>注册</h2>
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+          提交
+        </button>
+      {% endbuttons %}
+{#    <h2>注册</h2>#}
+{#        {% csrf_token %}#}
+{#        <div class="form-group"><label class="control-label" for="id_email">邮箱</label><input class="form-control" id="id_email" maxlength="255" name="email" placeholder="邮箱" required="required" title="" type="email" /></div>#}
+{#        <div class="form-group"><label class="control-label" for="id_username">用户名</label><input class="form-control" id="id_username" maxlength="30" name="username" placeholder="用户名" required="required" title="" type="text" /></div>#}
+{#        <div class="form-group"><label class="control-label" for="id_date_of_birth">出生日期</label><input class="form-control vDateField" type="date" id="id_date_of_birth" name="date_of_birth" placeholder="出生日期" required="required" size="10" title="" type="text" /></div>#}
+{#        <div class="form-group"><label class="control-label" for="id_password1">密码</label><input class="form-control" id="id_password1" name="password1" placeholder="密码" required="required" title="" type="password" /></div>#}
+{#        <div class="form-group"><label class="control-label" for="id_password2">确认密码</label><input class="form-control" id="id_password2" name="password2" placeholder="确认密码" required="required" title="" type="password" /></div>#}
+{#        <div class="form-group">#}
+{#            <button type="submit" class="btn btn-primary btn-lg btn-block">#}
+{#            提交#}
+{#            </button>#}
+{#        </div>#}
 </form>
 
 {# Read the documentation for more information #}

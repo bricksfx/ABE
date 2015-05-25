@@ -19,4 +19,7 @@ urlpatterns = patterns('',
                        url('^get_department_multiple/$', get_department_multiple, name="get_department_multiple"),
                        url('^message_list/$', message_list, name="message_list"),
                        url('^upload_new_message/$', upload_new_message, name='upload_new_message'),
+                       url('^upload_new_inline_message', upload_new_inline_message, name='upload_new_inline_message'),
+                       url('^user_info_if_complete_authenticate/$', user_info_if_complete_authenticate,
+                           name='user_info_if_complete_authenticate'),
                        )

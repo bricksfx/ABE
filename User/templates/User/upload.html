@@ -3,17 +3,27 @@
     <script>
         var file_share_dander_info = ["file_share_sex", "file_share_identity", "file_share_academy", "file_share_department"];
         function set_file_share_object(){
+            var form = $("#file_upload_form");
             var share_type = $("#id_share_type").val();
             if (share_type == "2"){
+                form.find("#file_upload_btn").attr('type', 'button');
                 $("#fileAttributeSelect").removeAttr('hidden', 'hidden');
             }
             else if(share_type == '1'){
                 $("#fileAttributeSelect").attr('hidden', 'hidden');
                 $("#id_share").val("public");
+                form.find("#file_upload_btn").attr('type', 'submit');
             }
             else if(share_type == '3'){
                 $("#fileAttributeSelect").attr('hidden', 'hidden');
                 $("#id_share").val("private");
+                form.find("#file_upload_btn").attr('type', 'submit');
+            }
+        }
+        function alert_complete_user_info(obj){
+            console.log($(obj).attr('class'));
+            if ($(obj).attr('type') == 'button') {
+                alert("请完善文件分享对象的信息");
             }
         }
         function GetMultipleDepartment(){
@@ -81,7 +91,27 @@
                 alert("请完善文件共享信息");
             }
             $("#id_share").val(file_share);
-        }
+
+    }
+    $(document).ready(function(){
+        $.ajax({
+            type:'POST',
+            data: {'info':'721821'},
+            url: '{% url 'user:user_info_if_complete_authenticate' %}',
+            cache: false,
+            dataType: 'html',
+            success: function(result){
+                if (result == '1'){
+                    alert("请完善用户信息");
+                    $("#complete_user_info").modal('show');
+                }
+            },
+            error: function(result){
+                alert("网络并不稳定");
+            }
+        });
+        return false;
+    });
     </script>
 {% endblock %}
 {% block title %}文件上传{% endblock %}
@@ -90,7 +120,7 @@
        <h1 class="page-header">文件上传</h1>
        <p>文件上传</p>
         <div class="file-upload">
-            <form enctype="multipart/form-data" method="post">
+            <form enctype="multipart/form-data" id="file_upload_form" method="post">
                 {% csrf_token %}
                 <p><label for="id_file">File:</label> <input id="id_file" name="file" type="file" /></p>
                 <p>
@@ -106,7 +136,7 @@
                     </p>
 
                 </p>
-                <button class="btn btn-info" type="submit">上传</button>
+                <button class="btn btn-info" id="file_upload_btn" type="submit" onclick="alert_complete_user_info(this)">上传</button>
             </form>
         </div>
         <form class="form-horizontal" id="fileAttributeSelect" hidden="hidden">

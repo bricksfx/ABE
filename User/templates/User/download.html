@@ -17,7 +17,6 @@
                                    <th>文件名</th>
                                    <th>大小</th>
                                    <th>上传日期</th>
-                                   <th>文件类型</th>
                                    <th>共享</th>
                                    <th>操作</th>
                                </tr>
@@ -26,8 +25,7 @@
                                     <td>{{ file }}</td>
                                     <td>{{ file.file_size_humanility }}</td>
                                     <td>{{ file.date_upload }}</td>
-                                    <td>{{ file.file.type }}</td>
-                                    <td>{{ file.share_type }}</td>
+                                    <td>{{ file.get_share_type_display }}</td>
                                     <td><a href="{% url 'user:file_down_single' file.id %}" target="_blank">下载</a><a href="{% url 'user:file_delete' file.id %}" target="_blank"> /删除</a></td>
                                 </tr>
                                 {% endfor %}

@@ -1,0 +1,27 @@
+{% load static %}
+<div class="col-xs-3 col-sm-3 col-md-2 message-list-inline-head-img-field">
+   <div class="head-img">
+        <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
+   </div>
+</div>
+<div class="col-xs-9 col-sm-8 col-md-9 message-list-inline-content">
+   <div class="user">
+       <p><span style="color: #428bca">{{ message_inline.user.username }} </span>
+           {% if message_inline.user_pre %}
+           回复 <span>{{ message_inline.user_pre }}</span>
+           {% endif %}
+       </p>
+   </div>
+   <div class="content">
+       <div class="content-detail">
+           <p>{{ message_inline.content }}</p>
+       </div>
+   </div>
+   <div class="date-info">
+       <p>
+           <span>{{ message_inline.date }} 发布</span>
+           <button class="btn btn-info btn-xs" id="btnInline {{ message_inline.messageList_id }} {{ message_inline.user.username }}" data-toggle="modal" data-target="#message_reply" onclick="get_inline_reply_info(this)">回复</button>
+
+       </p>
+   </div>
+</div>

@@ -12,7 +12,6 @@
     {% bootstrap_messages %}
     <link href="{% static 'css/login.css' %}" rel="stylesheet"/>
 
-
     <title>用户登录</title>
 </head>
 <body>
@@ -26,6 +25,7 @@
             <input type="password" id="id_password" maxlength="128" name="password" class="form-control" placeholder="Password" required>
             <input type="hidden" name="next" value="{{ next }}" />
             <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+            <button class="btn btn-lg btn-info btn-block" type="button"><a href="{% url 'user:register' %}">注册</a></button>
       </form>
     </div>
 {#    <div class="container">#}

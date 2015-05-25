@@ -194,8 +194,9 @@ class MessageListInline(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return self.user.username + "->" + self.user_pre
+        return self.user.username
 
     class Meta:
         verbose_name = "回复信息"
         verbose_name_plural = "回复信息"
+        ordering = ['-date']

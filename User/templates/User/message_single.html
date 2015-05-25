@@ -1,0 +1,72 @@
+{% load static %}
+<div class="col-sm-12 col-md-9 message-list-single" id="message_id_{{ message.id }}">
+   <div class="row">
+       <div class="col-xs-3 col-sm-2 col-md-2 message-list-top-head-img">
+           <div class="head-img">
+               {% if message.file_plug_in %}
+               <img src="{% static 'img/file.png' %}" class="img-thumbnail">
+               {% else %}
+               <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
+               {% endif %}
+           </div>
+       </div>
+       <div class="col-xs-9 col-sm-8 col-md-9 message-list-top-content">
+           <div class="user">
+               <p>
+                   <span>{{ message.user.username }} </span>
+                   {% if message.file_plug_in %}
+                       分享了文件
+                   {% else %}
+                       发布了信息
+                   {% endif %}
+
+               </p>
+           </div>
+           <div class="content">
+               <div class="content-detail">
+                   <p>{{ message.content }}</p>
+               </div>
+           </div>
+           <div class="file-plugin">
+               {% if message.file_plug_in %}
+                    <button class="btn btn-info btn-xs"><a href="{% url 'user:file_down_single' message.file_plug_in.id %}" target="_blank">附件下载</a></button><span> <a href="{% url 'user:file_down_single' message.file_plug_in.id %}" target="_blank">{{ message.file_plug_in }}</a></span>
+               {% endif %}
+           </div>
+           <div class="date-info">
+               <p>
+                   <span>{{ message.date }} 发布</span>
+                   <button class="btn btn-info btn-xs" id="btnTop {{ message.id }} {{ message.user.username }}" data-toggle="modal" onclick="get_inline_reply_info(this)" data-target="#message_reply">回复</button>
+               </p>
+           </div>
+       </div>
+       <div class="col-xs-10 col-sm-10 col-md-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-2">
+
+           <div class="row message-list-inline">
+               {% for message_inline in message.messagelistinline_set.all %}
+               <div class="col-xs-3 col-sm-3 col-md-2 message-list-inline-head-img-field">
+                   <div class="head-img">
+                        <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
+                   </div>
+               </div>
+               <div class="col-xs-9 col-sm-8 col-md-9 message-list-inline-content">
+                   <div class="user">
+                       <p><span style="color: #428bca">{{ message_inline.user.username }} </span>回复 <span>{{ message_inline.user_pre }}</span></p>
+                   </div>
+                   <div class="content">
+                       <div class="content-detail">
+                           <p>{{ message_inline.content }}</p>
+                       </div>
+                   </div>
+                   <div class="date-info">
+                       <p>
+                           <span>{{ message_inline.date }} 发布</span>
+                           <button class="btn btn-info btn-xs" id="btnInline {{ message.id }} {{ message_inline.user.username }}" data-toggle="modal" data-target="#message_reply" onclick="get_inline_reply_info(this)">回复</button>
+                       </p>
+                   </div>
+               </div>
+               {% endfor %}
+           </div>
+
+       </div>
+   </div>
+</div>

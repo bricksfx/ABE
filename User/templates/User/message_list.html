@@ -6,9 +6,9 @@
 {% block script %}
 <script>
     function new_message_submit(){
-        var modal = $("#modal");
-        modal.attr('id');
-        modal.find("btn").removeClass('btn-info').addClass('btn-danger').html('失败');
+{#        var modal = $("#modal");#}
+{#        modal.attr('id');#}
+{#        modal.find("btn").removeClass('btn-info').addClass('btn-danger').html('失败');#}
 
         $("#new_message_submit").attr('disabled', 'disabled');
         $("#new_message_blank_error").attr('class', 'sr-only');
@@ -36,22 +36,69 @@
                         $("#new_message_submit").attr('disabled', 'disabled');
                     }
                     else{
-                        console.log(result);
-                        $("#new_message_submit").attr('disabled', 'disabled');
+                        $(".message-list").prepend(result);
+                        $("#new_message_submit").removeAttr('disabled');
+                        $(".new_message #content_input").val("test");
                     }
                 },
                 error: function(result){
                     alert("提交出现问题");
+                    console.log(result);
+                    $("#new_message_submit").removeAttr('disabled');
+                    $(".new_message #content_input").val("");
                 }
             });
             return false;
         }
     }
+    var reply_info;
     function get_inline_reply_info(obj){
         console.log($(obj).attr('id'));
-        console.log("test");
-        var reply_info = $(this).attr("id");
+        reply_info = $(obj).attr('id');
         console.log(reply_info);
+    }
+    function new_message_inline_submit(){
+        var info = reply_info.split(' ');
+        console.log(info);
+        var modal = $("#message_reply");
+        modal.find("#reply-submit").attr('disabled', 'disabled').removeClass('btn-info').addClass('btn-danger').html('<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 提交中');
+        var content = modal.find("#id_content").val();
+        modal.find("#miss_content").attr('class', 'sr-only');
+        if (content == ''){
+            modal.find("#miss_content").removeClass('sr-only').addClass('alert alert-danger');
+            modal.find("#reply-submit").removeAttr('disabled').removeClass('btn-danger').addClass('btn-info').html('提交');
+        }
+        else{
+            $.ajax({
+                type: 'POST',
+                data: {'info': reply_info, 'content': content},
+                url: "{% url 'user:upload_new_inline_message' %}",
+                cache: false,
+                dataType: 'html',
+                success: function(result){
+                    if (result == '1'){
+                        alert("您所评论的内容已不存在， 可能被发布者删除了， 请刷新页面");
+                    }
+                    else if (result == '2'){
+                        alert("数据库I/O存在错误");
+                    }
+                    else{
+                        $("#message_id_" + info[1]).find('.message-list-inline').prepend(result);
+                    }
+                    modal.find("#miss_content").attr('class', 'sr-only');
+                    modal.find("#reply-submit").removeAttr('disabled').removeClass('btn-danger').addClass('btn-info').html('提交');
+                    modal.find("#id_content").val("");
+                    modal.modal('hide');
+                    alert("回复成功");
+                },
+                error: function(result){
+                    console.log(result);
+                    alert("回复出现问题");
+                }
+            });
+            return false;
+        }
+        console.log(content);
     }
 </script>
 {% endblock %}
@@ -71,7 +118,7 @@
                         <div class="form-group">
                             <label for="id_content" class="control-label">内容:</label>
                             <div class="sr-only" id="miss_content" role="alert">
-                                <p>评论内容不能为空</p>
+                                <p>回复内容不能为空</p>
                             </div>
                             <textarea class="form-control" id="id_content" maxlength="125" placeholder="请输入回复的内容（不超过125个字）"></textarea>
                         </div>
@@ -79,7 +126,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="submit" id="comment-submit" class="btn btn-primary">提交</button>
+                    <button type="button" id="reply-submit" class="btn btn-primary" onclick="new_message_inline_submit()">提交</button>
                 </div>
             </div>
         </div>
@@ -142,13 +189,14 @@
                            <div class="date-info">
                                <p>
                                    <span>{{ message.date }} 发布</span>
-                                   <button class="btn btn-info btn-xs" id="btnInline {{ message.id }} {{ message.user.username }}" data-toggle="modal" onclick="get_inline_reply_info(this)" data-target="#message_reply">回复</button>
+                                   <button class="btn btn-info btn-xs" id="btnTop {{ message.id }} {{ message.user.username }}" data-toggle="modal" onclick="get_inline_reply_info(this)" data-target="#message_reply">回复</button>
                                </p>
                            </div>
                        </div>
                        <div class="col-xs-10 col-sm-10 col-md-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-2">
-                           {% for message_inline in message.messagelistinline_set.all %}
+
                            <div class="row message-list-inline">
+                           {% for message_inline in message.messagelistinline_set.all %}
                                <div class="col-xs-3 col-sm-3 col-md-2 message-list-inline-head-img-field">
                                    <div class="head-img">
                                         <img src="{% static 'img/figure.png' %}"  class="img-thumbnail">
@@ -156,7 +204,11 @@
                                </div>
                                <div class="col-xs-9 col-sm-8 col-md-9 message-list-inline-content">
                                    <div class="user">
-                                       <p><span style="color: #428bca">{{ message_inline.user.username }} </span>回复 <span>{{ message_inline.user_pre }}</span></p>
+                                       <p><span style="color: #428bca">{{ message_inline.user.username }} </span>
+                                           {% if message_inline.user_pre %}
+                                           回复 <span>{{ message_inline.user_pre }}</span>
+                                           {% endif %}
+                                       </p>
                                    </div>
                                    <div class="content">
                                        <div class="content-detail">
@@ -166,13 +218,14 @@
                                    <div class="date-info">
                                        <p>
                                            <span>{{ message_inline.date }} 发布</span>
-                                           <button class="btn btn-info btn-xs" id="btnInline {{ message.id }} {{ message_inline.user.username }}" data-toggle="modal" data-target="#message_reply" onclick="get_inline_reply_info(this)">回复</button>
+                                           <button class="btn btn-info btn-xs" id="btnInline {{ message_inline.messageList_id }} {{ message_inline.user.username }}" data-toggle="modal" data-target="#message_reply" onclick="get_inline_reply_info(this)">回复</button>
 
                                        </p>
                                    </div>
                                </div>
+                               {% endfor %}
                            </div>
-                           {% endfor %}
+
                        </div>
                    </div>
                </div>
