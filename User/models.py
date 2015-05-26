@@ -81,6 +81,9 @@ class MyUser(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+    class Meta:
+        verbose_name = "用户"
+        verbose_name_plural = "用户"
 
 
 def upload_file_path(instance, filename):

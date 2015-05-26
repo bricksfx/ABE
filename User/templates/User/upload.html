@@ -86,6 +86,8 @@
             if (flag == 1) {
                 var file_share = sex + ":" + identity + ":" + academy + ":" + department;
                 $("#fileAttributeSelect").attr('hidden', 'hidden');
+                var form = $("#file_upload_form");
+                form.find("#file_upload_btn").attr('type', 'submit');
             }
             else{
                 alert("请完善文件共享信息");

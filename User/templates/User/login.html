@@ -25,7 +25,9 @@
             <input type="password" id="id_password" maxlength="128" name="password" class="form-control" placeholder="Password" required>
             <input type="hidden" name="next" value="{{ next }}" />
             <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
-            <button class="btn btn-lg btn-info btn-block" type="button"><a href="{% url 'user:register' %}">注册</a></button>
+            <br/>
+            <a href="{% url 'user:register' %}"><button class="btn btn-lg btn-info btn-block" type="button">注册</button></a>
+
       </form>
     </div>
 {#    <div class="container">#}

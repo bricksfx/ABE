@@ -65,7 +65,4 @@ def encrypt_file(key, in_filename, out_filename=None, chunksize=64*1024):
     return key
 
 if __name__ == '__main__':
-    key =  process_key("test")
-    print len(key)
-    print key
-    encrypt_file("test", "./1.mkv", "./2.mkv")
+    print create_key()
