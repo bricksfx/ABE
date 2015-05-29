@@ -283,9 +283,12 @@ def file_delete(request, file_id):
         file_delete = FileFromUser.objects.get(id=file_id)
     except FileFromUser.DoesNotExist, ex:
         return HttpResponse("您所要删除的文件不存在")
-    file_path = file_delete.file.path
-    file_delete.delete()
-    delete_file(file_path)
+    if file_delete.user == request.user:
+        file_path = file_delete.file.path
+        file_delete.delete()
+        delete_file(file_path)
+    else:
+        return HttpResponse("你他妈的流氓啊")
     return HttpResponse("文件删成功")
 
 
