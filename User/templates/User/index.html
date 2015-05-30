@@ -72,6 +72,9 @@
                             $("#" + item).attr("class", "alert alert-danger");
                         }
                     }
+                    else if(jsonObj['errors']  == '3'){
+                        alert("您已经完善过用户信息");
+                    }
                     else if(jsonObj['errors']  == '2'){
                         alert("IO出现错误");
                     }

@@ -28,17 +28,17 @@
                     if (result == '0')
                     {
                         alert("输入不能为空,绕过前端还有后端");
-                        $("#new_message_submit").attr('disabled', 'disabled');
+                        $("#new_message_submit").removeAttr('disabled');
                     }
                     if (result == '1')
                     {
                         alert("数据库存储出现问题, 请联系管理员 电话。。。。。。");
-                        $("#new_message_submit").attr('disabled', 'disabled');
+                        $("#new_message_submit").removeAttr('disabled');
                     }
                     else{
                         $(".message-list").prepend(result);
                         $("#new_message_submit").removeAttr('disabled');
-                        $(".new_message #content_input").val("test");
+                        $(".new_message #content_input").val("");
                     }
                 },
                 error: function(result){

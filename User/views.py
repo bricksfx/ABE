@@ -19,7 +19,7 @@ from django.http import StreamingHttpResponse
 from django.http import JsonResponse
 
 identityInfo = {u'4': u'本科生', u'5': u'研究生', u'6': u'教师'}
-danger_file_suffix = ['.java', '.sh', '.jsp', '.asp', '.sh', '.py']
+danger_file_suffix = ['.java', '.sh', '.jsp', '.asp', '.sh', '.py' '.php']
 
 
 @login_required(login_url='/login/')
@@ -373,9 +373,13 @@ def data_valid(data):
 def improve_user_info(request):
     if request.method == 'POST':
         data = request.POST
+        user_info_is_exist = DataOfUser.objects.filter(user=request.user)
+        if user_info_is_exist:
+            return JsonResponse({"errors": "3"})
         return_data = data_valid(data)
         if return_data['errors'] == '1':
             return JsonResponse(return_data)
+
         else:
             try:
                 user_info = DataOfUser()
@@ -387,8 +391,6 @@ def improve_user_info(request):
                 user_info.identity = request.POST['identity']
                 user_info.save()
                 set_user_abe_key_path(str(request.user.id))
-                import os
-                print os.getcwd()
             except Exception, ex:
                 return JsonResponse({"errors": "2"})
         return JsonResponse({'errors': '0'})
