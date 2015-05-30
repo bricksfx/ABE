@@ -19,6 +19,7 @@ from django.http import StreamingHttpResponse
 from django.http import JsonResponse
 
 identityInfo = {u'4': u'本科生', u'5': u'研究生', u'6': u'教师'}
+danger_file_suffix = ['.java', '.sh', '.jsp', '.asp', '.sh', '.py']
 
 
 @login_required(login_url='/login/')
@@ -32,6 +33,7 @@ def user_info_if_complete_authenticate(request):
             return HttpResponse('1')
         return HttpResponse("2")
     return HttpResponse("error")
+
 
 def Register(request):
 
@@ -181,6 +183,10 @@ def upload_file(request):
                 add_file_to_message_list(request.user, new_file)
 
             elif form.cleaned_data['share_type'] == '1':
+                file_name = request.FILES['file'].name.split("/")[-1].lower()
+                for item in danger_file_suffix:
+                    if file_name.endswith(item):
+                        return HttpResponse("文件名为可执行文件，可能威胁到服务器，请转为可共享文件分享")
                 new_file = FileFromUser()
                 new_file.user = request.user
                 new_file.share = form.cleaned_data['share']
