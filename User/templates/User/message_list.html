@@ -25,12 +25,15 @@
                 cache: false,
                 dataType: 'html',
                 success: function(result){
-                    if (result == '0')
+                    if (result == 'robot'){
+                        alert("您的行为疑似机器登录，目前已经将您的号暂时封杀，请联系本站管理员");
+                    }
+                    else if (result == '0')
                     {
                         alert("输入不能为空,绕过前端还有后端");
                         $("#new_message_submit").removeAttr('disabled');
                     }
-                    if (result == '1')
+                    else if (result == '1')
                     {
                         alert("数据库存储出现问题, 请联系管理员 电话。。。。。。");
                         $("#new_message_submit").removeAttr('disabled');

@@ -124,6 +124,9 @@ class FileFromUser(models.Model):
             return str(round(size/1000000.0, 2)) + u"MB"
         elif (size >= 1000000000) and (size <= 1000000000000):
             return str(round(size/1000000000.0, 2)) + u"GB"
+    class Meta:
+        verbose_name = "文件"
+        verbose_name_plural = "文件"
 
 
 class Academy(models.Model):
@@ -203,3 +206,15 @@ class MessageListInline(models.Model):
         verbose_name = "回复信息"
         verbose_name_plural = "回复信息"
         ordering = ['-date']
+
+
+class PostMessageTimeCheck(models.Model):
+    user = models.ForeignKey(MyUser)
+    time = models.DateTimeField()
+
+    def __unicode__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = "用户机器评论提交审核"
+        verbose_name_plural = "用户机器评论提交审核"

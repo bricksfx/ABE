@@ -60,16 +60,17 @@ class MyUserAdmin(UserAdmin):
     # The forms to add and change user instances
     form = UserChangeForm
     add_form = UserCreationForm
-
+    readonly_fields = ('email', 'email', 'username', 'date_of_birth',)
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'username', 'date_of_birth', 'is_admin')
+    list_display = ('email', 'username', 'date_of_birth', 'is_admin', 'is_active')
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'username', 'password')}),
         ('Personal info', {'fields': ('date_of_birth',)}),
         ('Permissions', {'fields': ('is_admin',)}),
+        ('is_active', {'fields': ('is_active',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -87,24 +88,37 @@ class MyUserAdmin(UserAdmin):
 class AcademyAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
+class FileFromUserAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'user', 'file', 'date_upload', 'share_type', 'share_type', 'share', 'key')
+    list_display = ('id', 'user', 'file', 'date_upload', 'share_type', 'share_type')
 
 class DepartmentAdmin(admin.ModelAdmin):
+
     list_display = ('id', 'academy', 'name',)
 
 class MessageListAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'user', 'content', 'file_plug_in', 'date')
     list_display = ('id', 'user', 'content', 'file_plug_in', 'date')
+
+class DateOfUserAdmin(admin.ModelAdmin):
+    readonly_fields = ('user', 'sex', 'academy', 'major', 'identity')
+    list_display = ('id', 'user', 'academy', 'major', 'identity')
+
+class MessageListInlineAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'messageList', 'content', 'user', 'user_pre')
+    list_display = ('id', 'messageList', 'content', 'user', 'user_pre')
 
 # Now register the new UserAdmin...
 admin.site.register(MyUser, MyUserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 # admin.site.unregister(Group)
-admin.site.register(FileFromUser)
+admin.site.register(FileFromUser, FileFromUserAdmin)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Academy, AcademyAdmin)
-admin.site.register(DataOfUser)
+admin.site.register(DataOfUser, DateOfUserAdmin)
 admin.site.register(MessageList, MessageListAdmin)
-admin.site.register(MessageListInline)
+admin.site.register(MessageListInline, MessageListInlineAdmin)
 
 
 

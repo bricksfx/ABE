@@ -19,7 +19,7 @@ from django.http import StreamingHttpResponse
 from django.http import JsonResponse
 
 identityInfo = {u'4': u'本科生', u'5': u'研究生', u'6': u'教师'}
-danger_file_suffix = ['.java', '.sh', '.jsp', '.asp', '.sh', '.py' '.php']
+danger_file_suffix = ['.java', '.sh', '.jsp', '.asp', '.sh', '.py' '.php', '.cgi']
 
 
 @login_required(login_url='/login/')
@@ -51,8 +51,9 @@ def Register(request):
 @csrf_protect
 def Login(request):
     form = LoginForm()
-
+    print request
     if request.method == 'POST':
+        print request.POST
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate(email=email, password=password)
@@ -69,7 +70,7 @@ def Login(request):
 
 def Logout(request):
     logout(request)
-    return HttpResponse("注销成功")
+    return HttpResponseRedirect('/index/')
 
 
 @login_required(login_url='/login/')
@@ -131,8 +132,6 @@ def add_file_to_message_list(user, file_plugin):
             elif attr[0] == '2':
                 content += u'只有男生可以下载'
 
-
-
     if file_plugin.share == 'public':
         content = u'分享了共享文件给所有人'
     message = MessageList()
@@ -142,6 +141,30 @@ def add_file_to_message_list(user, file_plugin):
     message.save()
 
 
+def time_out_valid(user):
+    import datetime
+    from django.utils import timezone
+    try:
+        post_time = PostMessageTimeCheck.objects.get(user=user)
+    except PostMessageTimeCheck.DoesNotExist, ex:
+        new_post_time_set = PostMessageTimeCheck()
+        new_post_time_set.user = user
+        new_post_time_set.time = timezone.now()
+        new_post_time_set.save()
+        return 1
+    time_now = timezone.now()
+    time_del = (time_now - post_time.time).total_seconds()
+    print time_del
+    if time_del > 30:
+        post_time.time = timezone.now()
+        post_time.save()
+        return 1
+    else:
+        post_time.time = timezone.now()
+        post_time.save()
+        return 0
+
+
 @login_required(login_url='/login/')
 def upload_file(request):
     user = request.user
@@ -149,6 +172,11 @@ def upload_file(request):
     academys = Academy.objects.all()
     form = UploadFileFormFromModel()
     if request.method == 'POST':
+        if not time_out_valid(request.user):
+            request.user.is_active = False
+            request.user.save()
+            logout(request)
+            return HttpResponse("您的行为疑似机器登录上传，暂时将您封号，请联系本站管理员")
         try:
             info = DataOfUser.objects.get(user=request.user)
         except DataOfUser.DoesNotExist, ex:
@@ -286,15 +314,18 @@ def file_down_single(request, file_id):
 @login_required(login_url='/login/')
 def file_delete(request, file_id):
     try:
-        file_delete = FileFromUser.objects.get(id=file_id)
+        file_delete_single = FileFromUser.objects.get(id=int(file_id))
     except FileFromUser.DoesNotExist, ex:
         return HttpResponse("您所要删除的文件不存在")
-    if file_delete.user == request.user:
-        file_path = file_delete.file.path
-        file_delete.delete()
+    if file_delete_single.user == request.user:
+        file_path = file_delete_single.file.path
+        file_delete_single.delete()
         delete_file(file_path)
     else:
-        return HttpResponse("你他妈的流氓啊")
+        request.user.is_active = False
+        request.user.save()
+        logout(request)
+        return HttpResponse("流氓行为，请不要删除别人的文件,您的号已被封杀")
     return HttpResponse("文件删成功")
 
 
@@ -411,6 +442,7 @@ def test_upload(request):
             return JsonResponse({"test": "test"})
     return render(request, 'User/test_upload.html', {})
 
+
 @login_required(login_url='/login/')
 def message_list(request):
     message = MessageList.objects.all()
@@ -425,7 +457,13 @@ def message_list(request):
 
 @login_required(login_url='/login/')
 def upload_new_message(request):
+
     if request.method == 'POST':
+        if not time_out_valid(request.user):
+            request.user.is_active = False
+            request.user.save()
+            logout(request)
+            return HttpResponse("robot")
         if request.POST['content'] == '':
             return HttpResponse("0")
         try:
@@ -443,7 +481,13 @@ def upload_new_message(request):
 
 @login_required(login_url='/login/')
 def upload_new_inline_message(request):
+
     if request.method == 'POST':
+        if not time_out_valid(request.user):
+            request.user.is_active = False
+            request.user.save()
+            logout(request)
+            return HttpResponse("robot")
         user_info = request.POST['info'].split(' ')
         content = request.POST['content']
         print user_info

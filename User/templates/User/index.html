@@ -18,7 +18,6 @@
             data: {csrfmiddlewaretoken: '{{ csrf_token }}' }
         });
         function getDepartment(){
-
             var academy = $("#select_academy_selection").val();
             $.ajax({
                 type:'POST',
