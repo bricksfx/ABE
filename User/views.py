@@ -17,6 +17,7 @@ from decrypt import decrypt_file
 from django.core.files import File
 from django.http import StreamingHttpResponse
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 identityInfo = {u'4': u'本科生', u'5': u'研究生', u'6': u'教师'}
 danger_file_suffix = ['.java', '.sh', '.jsp', '.asp', '.sh', '.py' '.php', '.cgi']
@@ -445,14 +446,22 @@ def test_upload(request):
 
 @login_required(login_url='/login/')
 def message_list(request):
-    message = MessageList.objects.all()
-    messages = []
-    for item in message:
-        messages.append(item)
+    messagelist = MessageList.objects.all()
+    paginator = Paginator(messagelist, 5)
+    page = request.GET.get('page')
+    page_num = range(1, paginator.num_pages + 1)
+    try:
+        messages = paginator.page(page)
+    except PageNotAnInteger, ex:
+        messages = paginator.page(1)
+    except EmptyPage:
+        messages = paginator.page(paginator.num_pages)
+    print messages.has_previous()
 
     academys = Academy.objects.all()
     user = request.user
-    return render(request, 'User/message_list.html', {'user': user, 'academys': academys, 'messages': messages})
+    return render(request, 'User/message_list.html', {'user': user, 'academys': academys,
+                                                      'messages': messages, 'page_num': page_num})
 
 
 @login_required(login_url='/login/')

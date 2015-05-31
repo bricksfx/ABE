@@ -154,6 +154,47 @@
                </div>
            </div>
 
+            <div class="container">
+                <nav>
+                    <ul class="pagination">
+                        {% if messages.has_previous %}
+                        <li>
+                            <a href="?page={{ messages.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">上一页</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="disabled">
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">上一页</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for num in page_num %}
+                            {% if num == messages.number %}
+                            <li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                            <li><a href="?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if messages.has_next %}
+                        <li>
+                            <a href="?page={{ messages.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">下一页</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="disabled">
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">下一页</span>
+                            </a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                 </nav>
+                </div>
+
+
            <div class="row message-list">
                {% for message in messages %}
                <div class="col-sm-12 col-md-9 message-list-single" id="message_id_{{ message.id }}">
@@ -236,11 +277,45 @@
            </div>
 
 
-
-
-
-
-
+            <div class="container">
+                <nav>
+                    <ul class="pagination">
+                        {% if messages.has_previous %}
+                        <li>
+                            <a href="?page={{ messages.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">上一页</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="disabled">
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">上一页</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for num in page_num %}
+                            {% if num == messages.number %}
+                            <li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                            <li><a href="?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if messages.has_next %}
+                        <li>
+                            <a href="?page={{ messages.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">下一页</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="disabled">
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">下一页</span>
+                            </a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                 </nav>
+                </div>
 
        </div>
     </div>
