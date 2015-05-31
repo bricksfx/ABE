@@ -155,7 +155,7 @@ def time_out_valid(user):
     time_now = timezone.now()
     time_del = (time_now - post_time.time).total_seconds()
     print time_del
-    if time_del > 30:
+    if time_del > 10:
         post_time.time = timezone.now()
         post_time.save()
         return 1
