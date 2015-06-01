@@ -336,7 +336,7 @@ def file_delete(request, file_id):
         request.user.save()
         logout(request)
         return HttpResponse("流氓行为，请不要删除别人的文件,您的号已被封杀")
-    return HttpResponse("文件删成功")
+    return HttpResponse("文件删除成功")
 
 
 @login_required(login_url='/login/')
@@ -451,6 +451,35 @@ def test_upload(request):
             print handle_uploaded_file(request.FILES['files[]'], request.user.username)
             return JsonResponse({"test": "test"})
     return render(request, 'User/test_upload.html', {})
+
+
+@login_required(login_url='/login/')
+def delete_message(request):
+    if request.method == 'POST':
+        info = request.POST['info'].split(' ')
+        if info[0] == 'btnTop':
+            try:
+                message = MessageList.objects.get(id=int(info[1]))
+            except MessageList.DoesNotExist:
+                return HttpResponse("0")
+            if request.user == message.user:
+                message.delete()
+                return HttpResponse("1")
+            else:
+                return HttpResponse("您尝试删除不属于您的文件，现在已经封了您的号")
+        elif info[0] == 'btnInline':
+            try:
+                message = MessageListInline.objects.get(id=int(info[1]))
+            except MessageListInline.DoesNotExist:
+                return HttpResponse("0")
+            if request.user == message.user:
+                return HttpResponse("2")
+            else:
+                return HttpResponse("您尝试删除不属于您发布的信息，现已经封了您的号")
+        else:
+            return HttpResponse("你提交的数据格式不正确")
+
+    return HttpResponse("test")
 
 
 @login_required(login_url='/login/')

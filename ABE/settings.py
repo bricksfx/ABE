@@ -22,6 +22,9 @@ SECRET_KEY = '5=%dk(yqg_h-lu-xjh(ell-t7)jryf990j@gnp1z-_!m$g4wfp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#charset
+DEFAULT_CHARSET = 'utf-8'
+
 #session
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
