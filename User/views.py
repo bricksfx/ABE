@@ -52,16 +52,24 @@ def Register(request):
 @csrf_protect
 def Login(request):
     form = LoginForm()
-    print request
     if request.method == 'POST':
-        print request.POST
+        flag = 1
+        try:
+            request.GET['next']
+        except KeyError:
+            flag = 0
+        print flag
+
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate(email=email, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/index/')
+                if not flag:
+                    return HttpResponseRedirect('/index/')
+                else:
+                    return HttpResponseRedirect(request.GET['next'])
             else:
                 return HttpResponse("您的号被封了, 请联系本站管理员")
         else:
@@ -76,6 +84,7 @@ def Logout(request):
 
 @login_required(login_url='/login/')
 def index(request):
+    print request.session.session_key
     user = request.user
     academys = Academy.objects.all()
     return render(request, 'User/index.html', {'user': user, 'academys': academys})

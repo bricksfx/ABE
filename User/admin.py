@@ -97,8 +97,9 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('id', 'academy', 'name',)
 
 class MessageListAdmin(admin.ModelAdmin):
+    search_fields = ('id',)
     readonly_fields = ('id', 'user', 'content', 'file_plug_in', 'date')
-    list_display = ('id', 'user', 'content', 'file_plug_in', 'date')
+    list_display = ('id', 'user', 'file_plug_in', 'date')
 
 class DateOfUserAdmin(admin.ModelAdmin):
     readonly_fields = ('user', 'sex', 'academy', 'major', 'identity')
@@ -106,7 +107,7 @@ class DateOfUserAdmin(admin.ModelAdmin):
 
 class MessageListInlineAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'messageList', 'content', 'user', 'user_pre')
-    list_display = ('id', 'messageList', 'content', 'user', 'user_pre')
+    list_display = ('id', 'messageList', 'user', 'user_pre')
 
 # Now register the new UserAdmin...
 admin.site.register(MyUser, MyUserAdmin)
