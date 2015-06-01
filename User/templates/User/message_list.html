@@ -23,6 +23,7 @@
                     }
                     if(result == '2'){
                         $("#message_inline_id_" + message_id).remove();
+                        alert("删除成功")
                     }
                 },
                 error: function(result){
@@ -300,7 +301,7 @@
                                            <p>
                                                <span>{{ message_inline.date }} 发布</span>
                                                <button class="btn btn-info btn-xs" id="btnInline {{ message_inline.messageList_id }} {{ message_inline.user.username }}" data-toggle="modal" data-target="#message_reply" onclick="get_inline_reply_info(this)">回复</button>
-                                               {% if message.user == user %}
+                                               {% if message_inline.user == user %}
                                                    <button class="btn btn-info btn-xs" id="btnInline {{ message_inline.id }}" onclick="delete_message(this)">删除</button>
                                                {% endif %}
                                            </p>

@@ -473,6 +473,7 @@ def delete_message(request):
             except MessageListInline.DoesNotExist:
                 return HttpResponse("0")
             if request.user == message.user:
+                message.delete()
                 return HttpResponse("2")
             else:
                 return HttpResponse("您尝试删除不属于您发布的信息，现已经封了您的号")
@@ -522,7 +523,7 @@ def upload_new_message(request):
             print ex
             return HttpResponse("1")
 
-        return render(request, 'User/message_single.html', {'message': new_message})
+        return render(request, 'User/message_single.html', {'message': new_message, 'user': request.user})
     return HttpResponse("upload new message")
 
 
@@ -554,7 +555,7 @@ def upload_new_inline_message(request):
         except Exception, ex:
             print ex
             return HttpResponse("2")
-        return render(request, 'User/message_inline_single.html', {'message_inline': inline})
+        return render(request, 'User/message_inline_single.html', {'message_inline': inline, 'user': request.user})
     return HttpResponse("upload_new_message_inline")
 
 #TODO phonegap
