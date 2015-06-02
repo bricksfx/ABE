@@ -48,6 +48,28 @@ def Register(request):
         form = UserCreationForm()
     return render(request, 'User/register.html', {'form': form})
 
+@login_required(login_url='/login/')
+def change_password(request):
+    if request.method == "POST":
+        original_password = request.POST['original_password']
+        new_password = request.POST['new_password']
+        new_password_confirm = request.POST['new_password_confirm']
+        if len(original_password) > 35 or len(new_password) > 35 or len(new_password_confirm) > 35:
+            return HttpResponse('0')
+        user = authenticate(email=request.user.email, password=original_password)
+        if user is not None:
+            print new_password
+            if new_password == "" or new_password_confirm == "" or new_password_confirm != new_password:
+                return HttpResponse("2")
+            else:
+                print "success"
+                request.user.set_password(new_password)
+                request.user.save()
+                return HttpResponse("3")
+        else:
+            return HttpResponse("1")
+        return HttpResponse("密码修改成功")
+    return HttpResponse("change_password")
 
 @csrf_protect
 def Login(request):

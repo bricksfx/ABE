@@ -4,6 +4,7 @@ from User.views import *
 urlpatterns = patterns('',
                        url('^login', Login, name="login"),
                        url('^register/$', Register, name="register"),
+                       url('^change_password', change_password, name="change_password"),
                        url('^logout/$', Logout, name="logout"),
                        url('^index', index, name="index"),
                        url('^upload/$', upload_file, name="upload"),

@@ -21,9 +21,12 @@
                         $("#message_id_" + message_id).remove();
                         alert("删除成功");
                     }
-                    if(result == '2'){
+                    else if(result == '2'){
                         $("#message_inline_id_" + message_id).remove();
-                        alert("删除成功")
+                        alert("删除成功");
+                    }
+                    else{
+                        alert("删除出现问题");
                     }
                 },
                 error: function(result){
@@ -357,7 +360,6 @@
                     </ul>
                  </nav>
                 </div>
-
        </div>
     </div>
 {% endblock %}

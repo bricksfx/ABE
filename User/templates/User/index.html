@@ -54,7 +54,6 @@
                 $("#" + item).attr("class", "sr-only");
             }
             $("#UserInfoSubmit").attr('disabled', 'disabled');
-            console.log(UserInfo);
             $.ajax({
                 type:'POST',
                 data:UserInfo,
@@ -67,7 +66,6 @@
                     if (jsonObj['errors'] == '1')
                     {
                         for (var item in jsonObj){
-                            console.log(item);
                             $("#" + item).attr("class", "alert alert-danger");
                         }
                     }
@@ -91,6 +89,64 @@
             $("#UserInfoSubmit").removeAttr('disabled','disabled');
 
            return false;
+        }
+        function changePassword(){
+            var modal = $("#change_password");
+            var password = new Object();
+
+            password.original_password = modal.find("#original_password").val();
+            password.new_password = modal.find("#new_password").val();
+            password.new_password_confirm = modal.find("#new_password_confirm").val();
+            modal.find("#pass1").attr("class", "form-group");
+            modal.find("#pass1 span").attr("class", "sr-only");
+            modal.find("#pass2").attr("class", "form-group");
+            modal.find("#pass2 span").attr("class", "sr-only");
+            modal.find("#password-submit").attr("disabled", "disabled").removeClass("btn-primary").addClass("btn-danger").html('<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 提交中');
+            $.ajax({
+                type: "POST",
+                data: password,
+                url: "{% url "user:change_password" %}",
+                cache: false,
+                dataType: 'html',
+                success: function(result){
+                    if (result == '0'){
+                        alert("密码长度过长");
+                        modal.find("#password-submit").removeAttr("disabled").addClass("btn-primary").removeClass("btn-danger").html('提交');
+                    }
+                    if (result == '1'){
+                        modal.find("#pass1").addClass("has-error");
+                        modal.find("#pass1 span").removeClass("sr-only").addClass("help-block");
+                        modal.find("#password-submit").removeAttr("disabled").addClass("btn-primary").removeClass("btn-danger").html('提交');
+
+                    }
+                    else if (result == '2')
+                    {
+                        modal.find("#pass2").addClass("has-error");
+                        modal.find("#pass2 span").removeClass("sr-only").addClass("help-block");
+                        modal.find("#password-submit").removeAttr("disabled").addClass("btn-primary").removeClass("btn-danger").html('提交');
+                    }
+                    else if(result == '3')
+                    {
+                        alert("更换密码成功");
+                        modal.modal('hide');
+                        modal.find("#pass1").attr("class", "form-group");
+                        modal.find("#pass1 span").attr("class", "sr-only");
+                        modal.find("#pass2").attr("class", "form-group");
+                        modal.find("#pass2 span").attr("class", "sr-only");
+                        modal.find("#original_password").val();
+                        modal.find("#password-submit").removeAttr("disabled").addClass("btn-primary").removeClass("btn-danger").html('提交');
+                        modal.find("#new_password").val("");
+                        modal.find("#new_password_confirm").val("");
+                    }
+                    else{
+                        alert("未知错误");
+                    }
+                },
+                error: function(result){
+                    alert("更改密码出现错误");
+                }
+            });
+            return false;
         }
     </script>
     {% block script %}
@@ -124,7 +180,7 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.email }} <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
                       <li><a href="#" data-toggle="modal" data-target="#complete_user_info">完善账户信息</a></li>
-                      <li><a href="#">修改密码</a></li>
+                      <li><a href="#" data-toggle="modal" data-target="#change_password">修改密码</a></li>
                       <li><a href="{% url 'user:logout' %}">注销登录</a></li>
                   </ul>
               </li>
@@ -134,57 +190,92 @@
     </nav>
     {% block modal %}
     {% endblock %}
+        <div class="modal fade" id="change_password" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group" id="pass1">
+                                <lable for="original_password"><b>原始密码</b></lable>
+                                <input type="password" class="form-control" id="original_password" maxlength="35" placeholder="原始密码">
+                                <span class="sr-only">原始密码输入错误</span>
+                            </div>
+                            <div class="form-group">
+                                <lable for="new_password"><b>新密码</b></lable>
+                                <input type="password" class="form-control" id="new_password" maxlength="35" placeholder="新密码">
+                            </div>
+                            <div class="form-group" id="pass2">
+                                <lable for="new_password_confirm"><b>新密码确认</b></lable>
+                                <input type="password" class="form-control" id="new_password_confirm" maxlength="35" placeholder="新密码确认">
+                                <span class="sr-only">两次输入密码不匹配或输入为空</span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" id="password-submit" class="btn btn-primary" onclick="changePassword()">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <div class="modal fade" id="complete_user_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="exampleModalLabel">完善账户信息</h4>
-          </div>
-          <div class="sr-only" id="submit_img">
-            <img src="{% static 'img/super_saya.gif' %}"/>
-          </div>
-          <div class="modal-body info_improve">
-            <form>
-              <div class="sr-only" id="errors" role="alert"><p>请完善以下信息</p></div>
-              <div class="select_sex" id="select_sex">
-                <div class="sr-only" id="sex" role="alert"><p>请选择性别</p></div>
-                <label class="label_left" for="select_sex_selection">性别 :</label>
-                <select id="select_sex_selection">
-                  <option value selected="selected">--------</option>
-                  <option value="1">女</option>
-                  <option value="2">男</option>
-                </select>
-              </div>
-              <div class="select_academy">
-              <div class="sr-only" id="academy" role="alert"><p>请选择学院</p></div>
-                  <label class="label_left" for="select_academy_selection">学院 :</label>
-                  <select id="select_academy_selection" onchange="getDepartment()">
-                      <option value selected="selected">--------</option>
-                      {% for academy in academys %}
-                          <option value="{{ academy.id }}">{{ academy.name }}</option>
-                      {% endfor %}
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="exampleModalLabel">完善账户信息</h4>
+            </div>
+            <div class="sr-only" id="submit_img">
+              <img src="{% static 'img/super_saya.gif' %}"/>
+            </div>
+            <div class="modal-body info_improve">
+              <form>
+                <div class="sr-only" id="errors" role="alert"><p>请完善以下信息</p></div>
+                <div class="select_sex" id="select_sex">
+                  <div class="sr-only" id="sex" role="alert"><p>请选择性别</p></div>
+                  <label class="label_left" for="select_sex_selection">性别 :</label>
+                    <select id="select_sex_selection">
+                    <option value selected="selected">--------</option>
+                    <option value="1">女</option>
+                    <option value="2">男</option>
                   </select>
+                </div>
+                <div class="select_academy">
+                <div class="sr-only" id="academy" role="alert"><p>请选择学院</p></div>
+                    <label class="label_left" for="select_academy_selection">学院 :</label>
+                    <select id="select_academy_selection" onchange="getDepartment()">
+                        <option value selected="selected">--------</option>
+                        {% for academy in academys %}
+                            <option value="{{ academy.id }}">{{ academy.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="select_department">
+                    <div class="sr-only" id="department" role="alert"><p>请选择所在系</p></div>
+                    <label class="label_left" for="select_department_selection">所在系:</label>
+                    <select id="select_department_selection">
+                        <option value selected="selected">--------</option>
+                    </select>
+                </div>
+              <div class="select_identity">
+                    <label class="label_left" for="select_identity_selection">身份:</label>
+                    <div class="sr-only" id="identity" role="alert"><p>请选择身份</p></div>
+                    <select id="select_identity_selection">
+                        <option value selected="selected">--------</option>
+                        <option value="4">本科生</option>
+                        <option value="5">研究生</option>
+                        <option value="6">教师</option>
+                    </select>
               </div>
-              <div class="select_department">
-                  <div class="sr-only" id="department" role="alert"><p>请选择所在系</p></div>
-                  <label class="label_left" for="select_department_selection">所在系:</label>
-                  <select id="select_department_selection">
-                      <option value selected="selected">--------</option>
-                  </select>
-              </div>
-            <div class="select_identity">
-                  <label class="label_left" for="select_identity_selection">身份:</label>
-                  <div class="sr-only" id="identity" role="alert"><p>请选择身份</p></div>
-                  <select id="select_identity_selection">
-                      <option value selected="selected">--------</option>
-                      <option value="4">本科生</option>
-                      <option value="5">研究生</option>
-                      <option value="6">教师</option>
-                  </select>
-              </div>
-            </form>
+              </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
