@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_protect
 from .forms import UploadFileForm, LoginForm, UploadFileFormFromModel
-from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model, set_tmp_path, set_user_abe_key_path, file_key_encrypt, generator_key_for_user, generator_key_for_user_self
+from .file_handle import handle_uploaded_file, delete_file, make_file_path_for_model, set_tmp_path, set_user_abe_key_path, file_key_encrypt, generator_key_for_user, generator_key_for_user_self, delete_file_key
 from .admin import UserCreationForm
 from .decrypt import decrypt_file
 from .models import *
@@ -329,8 +329,9 @@ def file_delete(request, file_id):
         return HttpResponse("您所要删除的文件不存在")
     if file_delete_single.user == request.user:
         file_path = file_delete_single.file.path
-        file_delete_single.delete()
         delete_file(file_path)
+        delete_file_key(file_delete_single.id, file_delete_single.share_type)
+        file_delete_single.delete()
     else:
         request.user.is_active = False
         request.user.save()
@@ -463,6 +464,10 @@ def delete_message(request):
             except MessageList.DoesNotExist:
                 return HttpResponse("0")
             if request.user == message.user:
+                if message.file_plug_in:
+                    print delete_file(message.file_plug_in.file.path)
+                    print delete_file_key(message.file_plug_in.id, message.file_plug_in.share_type)
+                    message.file_plug_in.delete()
                 message.delete()
                 return HttpResponse("1")
             else:

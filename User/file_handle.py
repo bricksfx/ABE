@@ -54,6 +54,22 @@ def generator_key_for_user_self(user, file_id):
         key += chr(decry.decifra(E, privatekey))
     return key
 
+
+def delete_file_key(file_id, type):
+    if type == '2':
+        path_out = BASE_DIR + '/file_key/'
+        path_out += (str(file_id) + "_self")
+        delete_file(path_out)
+        path_out = BASE_DIR + '/file_key/'
+        path_out += str(file_id)
+        return delete_file(path_out)
+    if type == '3':
+        path_out = BASE_DIR + '/file_key/'
+        path_out += (str(file_id) + "_self")
+        return delete_file(path_out)
+    return True
+
+
 def file_key_encrypt(user, file_id, share, key, type):
     path = BASE_DIR + '/key_info/' + str(user.id) + '/' + 'cripto_info.txt'
     cry = Crypto(400, "username")
